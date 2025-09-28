@@ -15,7 +15,7 @@ console.log('Loaded MONGO_URI:', process.env.MONGO_URI);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const allowedOrigins = ['http://localhost:5173', 'https://guems-frontend.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://guems-frontend.vercel.app', 'https://guems.onrender.com'];
 
 
 app.use(cors({
