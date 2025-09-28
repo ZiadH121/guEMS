@@ -10,82 +10,10 @@ The **Galala Event Management System (EMS)** is a MERN-based MVP designed to han
 
 ---
 
-## 📂 Project Structure
-```
-
-guEMS/
-├── client/   # React + Vite frontend
-└── server/   # Express + MongoDB backend
-
-````
-
-- **Frontend**: React 19, Vite, React Router, Bootstrap  
-- **Backend**: Express, MongoDB (Atlas), JWT Auth  
-- **Deployment**: Vercel (frontend) + Render (backend)  
-
----
-
-## 🛠️ Local Development
-
-1. **Clone repo**
-   ```bash
-   git clone https://github.com/ZiadH121/guEMS.git
-   cd guEMS
-````
-
-2. **Install dependencies**
-
-   ```bash
-   cd client && npm install
-   cd ../server && npm install
-   ```
-
-3. **Setup environment variables**
-
-   * `server/.env`
-
-     ```
-     PORT=5000
-     MONGO_URI=your_mongo_connection
-     JWT_SECRET=your_secret
-     ```
-   * `client/.env`
-
-     ```
-     VITE_API_URL=http://localhost:5000/api
-     ```
-
-4. **Run backend**
-
-   ```bash
-   cd server
-   node server.js
-   ```
-
-5. **Run frontend**
-
-   ```bash
-   cd client
-   npm run dev
-   ```
-
-Frontend runs at → `http://localhost:5173`
-Backend runs at → `http://localhost:5000`
-
----
-
-## 🌐 Deployment
-
-* **Frontend (Vercel)**
-
-  * Root directory: `client`
-  * Build command: `npm run build`
-  * Output: `dist`
-
-* **Backend (Render)**
-
-  * Root directory: `server`
-  * Build command: `npm install`
-  * Start command: `node server.js`
+| Section | Details |
+|---------|---------|
+| **📂 Project Structure** | ```<br>guEMS/<br>├── client/   # React + Vite frontend<br>└── server/   # Express + MongoDB backend<br>``` |
+| **🛠️ Local Development** | **1. Clone repo**<br>```bash<br>git clone https://github.com/ZiadH121/guEMS.git<br>cd guEMS<br>```<br><br>**2. Install dependencies**<br>```bash<br>cd client && npm install<br>cd ../server && npm install<br>```<br><br>**3. Setup environment variables**<br>- `server/.env`<br>```<br>PORT=5000<br>MONGO_URI=your_mongo_connection<br>JWT_SECRET=your_secret<br>```<br>- `client/.env`<br>```<br>VITE_API_URL=http://localhost:5000/api<br>```<br><br>**4. Run backend**<br>```bash<br>cd server<br>node server.js<br>```<br><br>**5. Run frontend**<br>```bash<br>cd client<br>npm run dev<br>```<br><br>Frontend → `http://localhost:5173`<br>Backend → `http://localhost:5000` |
+| **🌐 Deployment** | **Frontend (Vercel)**<br>- Root directory: `client`<br>- Build command: `npm run build`<br>- Output: `dist`<br><br>**Backend (Render)**<br>- Root directory: `server`<br>- Build command: `npm install`<br>- Start command: `node server.js` |
 
 ---
