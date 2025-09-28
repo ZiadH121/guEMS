@@ -1,7 +1,7 @@
 // src/utils/api.js
 import i18n from 'i18next';
 
-const API_BASE_URL = 'https://gip-backend.onrender.com/api';
+const API_BASE_URL = 'https://guems.onrender.com/api';
 
 export const apiFetch = async (endpoint, options = {}) => {
   const lang = i18n.language || 'en';
