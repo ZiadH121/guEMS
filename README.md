@@ -12,8 +12,8 @@ The **Galala Event Management System (EMS)** is a MERN-based MVP designed to han
 
 | Section | Details |
 |---------|---------|
-| **📂 Project Structure** | ```<br>guEMS/<br>├── client/   # React + Vite frontend<br>└── server/   # Express + MongoDB backend<br>``` |
-| **🛠️ Local Development** | **1. Clone repo**<br>```bash<br>git clone https://github.com/ZiadH121/guEMS.git<br>cd guEMS<br>```<br><br>**2. Install dependencies**<br>```bash<br>cd client && npm install<br>cd ../server && npm install<br>```<br><br>**3. Setup environment variables**<br>- `server/.env`<br>```<br>PORT=5000<br>MONGO_URI=your_mongo_connection<br>JWT_SECRET=your_secret<br>```<br>- `client/.env`<br>```<br>VITE_API_URL=http://localhost:5000/api<br>```<br><br>**4. Run backend**<br>```bash<br>cd server<br>node server.js<br>```<br><br>**5. Run frontend**<br>```bash<br>cd client<br>npm run dev<br>```<br><br>Frontend → `http://localhost:5173`<br>Backend → `http://localhost:5000` |
-| **🌐 Deployment** | **Frontend (Vercel)**<br>- Root directory: `client`<br>- Build command: `npm run build`<br>- Output: `dist`<br><br>**Backend (Render)**<br>- Root directory: `server`<br>- Build command: `npm install`<br>- Start command: `node server.js` |
+| **📂 Project Structure** | ```text\nguEMS/\n├── client/   # React + Vite frontend\n└── server/   # Express + MongoDB backend\n``` |
+| **🛠️ Local Development** | **1. Clone repo**  ```bash\ngit clone https://github.com/ZiadH121/guEMS.git\ncd guEMS\n``` <br> **2. Install dependencies**  ```bash\ncd client && npm install\ncd ../server && npm install\n``` <br> **3. Setup environment variables**  - `server/.env`  ```env\nPORT=5000\nMONGO_URI=your_mongo_connection\nJWT_SECRET=your_secret\n```  - `client/.env`  ```env\nVITE_API_URL=http://localhost:5000/api\n``` <br> **4. Run backend**  ```bash\ncd server\nnode server.js\n``` <br> **5. Run frontend**  ```bash\ncd client\nnpm run dev\n``` <br> Frontend → http://localhost:5173 <br> Backend → http://localhost:5000 |
+| **🌐 Deployment** | **Frontend (Vercel)** <br> - Root directory: `client` <br> - Build command: `npm run build` <br> - Output: `dist` <br><br> **Backend (Render)** <br> - Root directory: `server` <br> - Build command: `npm install` <br> - Start command: `node server.js` |
 
 ---
