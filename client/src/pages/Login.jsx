@@ -102,7 +102,7 @@ const Login = () => {
 
           <p className="text-center mt-3">
             {t('login.noAccount')}{' '}
-            <span style={{ color: '#623E2A', cursor: 'pointer' }} onClick={() => navigate('/register')}>
+            <span style={{ color: '#0D234B', cursor: 'pointer' }} onClick={() => navigate('/register')}>
               {t('login.register')}
             </span>
           </p>

@@ -53,7 +53,7 @@ const MiniSidebar = () => {
               width: '36px',
               height: '36px',
               borderRadius: '50%',
-              backgroundColor: '#623E2A',
+              backgroundColor: '#0D234B',
               color: '#fff',
               border: 'none',
               fontSize: '18px',

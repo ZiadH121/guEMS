@@ -10,7 +10,7 @@ import { Accordion, Tabs, Tab, Button, Container } from 'react-bootstrap';
 import { apiFetch } from '../utils/api';
 import { useTranslation } from 'react-i18next';
 
-const COLORS = ["#623E2A", "#A1866F", "#CBB6A2", "#d9a66b", "#f0c987"];
+const COLORS = ["#0D234B", "#0D234B", "#CBB6A2", "#d9a66b", "#f0c987"];
 
 const Metrics = () => {
   const today = new Date();
@@ -382,7 +382,7 @@ const Metrics = () => {
               />
               <Bar
                 dataKey="bookings"
-                fill="#623E2A"
+                fill="#0D234B"
                 name={t('metrics.bookingsLabel')}
                 isAnimationActive={false}
               />
@@ -422,7 +422,7 @@ const Metrics = () => {
                   return null;
                 }}
               />
-              <Line type="monotone" dataKey="revenue" stroke="#A1866F" strokeWidth={3} />
+              <Line type="monotone" dataKey="revenue" stroke="#0D234B" strokeWidth={3} />
             </LineChart>
           </ResponsiveContainer>
         ) : null}

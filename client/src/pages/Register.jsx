@@ -182,7 +182,7 @@ const Register = () => {
           <p className="text-center mt-3">
             {t('register.alreadyAccount')}{' '}
             <span
-              style={{ color: '#623E2A', cursor: 'pointer' }}
+              style={{ color: '#0D234B', cursor: 'pointer' }}
               onClick={() => navigate('/login')}
             >
               {t('register.login')}

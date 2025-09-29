@@ -80,7 +80,7 @@
     font-family: inherit;
     border: none;
     cursor: pointer;
-    background-color: #243D8F;
+    background-color: #0D234B;
     color: #fff;
     padding: 10px 20px;
     border-radius: 6px;
@@ -88,11 +88,11 @@
   }
   
   button:hover {
-    background-color: #9BCB61;
+    background-color: #7CC342;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    color: #243D8F;
+    color: #0D234B;
     font-weight: 600;
     line-height: 1.2;
     margin-bottom: 10px;
@@ -133,30 +133,30 @@
   footer {
     text-align: center;
     padding: 30px;
-    background-color: 243D8F;
+    background-color: #0D234B;
     color: white;
     font-size: 14px;
   }
 
   .text-brown {
-    color: #243D8F;
+    color: #0D234B;
   }
   
   .bg-brown {
-    background-color: #243D8F !important;
+    background-color: #0D234B !important;
     color: white !important;
   }
   
   .bg-brown:hover {
-    background-color: #1b2a63 !important;
+    background-color: #08152d !important;
   }
   
   .bg-custom {
-    background-color: #9BCB61 !important;
+    background-color: #7CC342 !important;
   }
   
   .custom-navbar {
-    background-color: #243D8F !important;
+    background-color: #0D234B !important;
   }
   
   .custom-navbar .nav-link,
@@ -165,7 +165,7 @@
   }
   
   .custom-navbar .nav-link.active {
-    color: #9BCB61 !important;
+    color: #7CC342 !important;
   }
 
   .sidebar {
@@ -175,7 +175,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    background-color: #243D8F;
+    background-color: #0D234B;
     padding: 10px 8px 10px 8px;
     border-radius: 0 10px 10px 0;
     box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
@@ -195,7 +195,7 @@
   }
   
   .sidebar-link:hover {
-    background-color: #9BCB61;
+    background-color: #7CC342;
   }
   
   .icon-label {
@@ -240,8 +240,8 @@ button:hover,
 }
 
 .accordion-button {
-  background-color: #9BCB61 !important;
-  color: #2d2118 !important;
+  background-color: #7CC342 !important;
+  color: #fff !important;
   font-weight: 600;
   border-radius: 8px 8px 0 0;
   border: none;
@@ -252,30 +252,30 @@ button:hover,
 }
 
 .accordion-button:not(.collapsed) {
-  background-color: #7AAE47 !important;
-  color: #221b14 !important;
+  background-color: #5e9e2e !important;
+  color: #fff !important;
 }
 
 .accordion-body {
-  background-color: #f7f2ec;
+  background-color: #F8F9FA;
 }
 
 .custom-tabs .nav-link {
-  background-color: #e6d5c3;
-  color: #4a3f35;
-  border: 1px solid #bfa78a;
+  background-color: #F8F9FA;
+  color: #0D234B;
+  border: 1px solid #E0E0E0;
   font-weight: 500;
 }
 
 .custom-tabs .nav-link:hover {
-  background-color: #d9c2ab;
-  color: #2d2118;
+  background-color: #e6e6e6;
+  color: #0D234B;
 }
 
 .custom-tabs .nav-link.active {
-  background-color: #a99175 !important;
+  background-color: #0D234B !important;
   color: #fff !important;
-  border-color: #8d7357 !important;
+  border-color: #0D234B !important;
 }
 
 .custom-tabs .nav-item {
@@ -284,13 +284,13 @@ button:hover,
 }
 
 .export-button {
-  background-color: #a99175 !important;
+  background-color: #0D234B !important;
   color: white !important;
   border: none !important;
 }
 
 .export-button:hover {
-  background-color: #8d7357 !important;
+  background-color: #08152d !important;
   color: white !important;
 }
 

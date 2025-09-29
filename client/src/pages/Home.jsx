@@ -83,10 +83,10 @@ const heroSection = {
   marginBottom: '50px'
 };
 
-const mainTitle = {
-  fontSize: '36px',
-  color: '#623E2A',
-  marginBottom: '10px'
+const mainTitle = { 
+  fontSize: '36px', 
+  color: '#0D234B', 
+  marginBottom: '10px' 
 };
 
 const subtitle = {
@@ -104,7 +104,7 @@ const buttonGroup = {
 
 const heroButton = {
   padding: '12px 24px',
-  backgroundColor: '#623E2A',
+  backgroundColor: '#0D234B',
   color: '#fff',
   borderRadius: '6px',
   textDecoration: 'none',
@@ -118,7 +118,7 @@ const section = {
 
 const sectionTitle = {
   fontSize: '28px',
-  color: '#623E2A',
+  color: '#0D234B',
   marginBottom: '10px'
 };
 
