@@ -240,7 +240,7 @@ button:hover,
 }
 
 .accordion-button {
-  background-color: #7CC342 !important;
+  background-color: #0D234B !important;
   color: #fff !important;
   font-weight: 600;
   border-radius: 8px 8px 0 0;
@@ -252,7 +252,7 @@ button:hover,
 }
 
 .accordion-button:not(.collapsed) {
-  background-color: #5e9e2e !important;
+  background-color: #08152d !important;
   color: #fff !important;
 }
 
