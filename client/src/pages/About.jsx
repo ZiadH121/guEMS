@@ -9,7 +9,7 @@ const About = () => {
   const { t } = useTranslation();
   
   useEffect(() => {
-    document.title = `GIP - ${t('titles.about')}`;
+    document.title = `GEMS - ${t('titles.about')}`;
   }, [t]);
 
   return (

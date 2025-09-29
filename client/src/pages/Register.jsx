@@ -23,7 +23,7 @@ const Register = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.register')}`;
+    document.title = `GEMS - ${t('titles.register')}`;
   }, [t]);  
 
   const handleChange = e => {

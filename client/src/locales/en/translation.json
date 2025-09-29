@@ -1,13 +1,13 @@
 {
   "home": {
-    "title": "Welcome to Galala Innovation Park",
+    "title": "Welcome to Galala Event Management System",
     "subtitle": "Empowering innovation, collaboration, and sustainable progress through smart facilities and events.",
     "bookEvent": "Book Event",
     "reserveVenue": "Reserve Venue",
     "myBookings": "My Bookings",
     "viewMetrics": "View Metrics",
     "adminPanel": "Admin Panel",
-    "whyTitle": "Why Galala Innovation Park?",
+    "whyTitle": "Why Galala Event Management System",
     "whyText": "At the heart of Galala lies an ecosystem that supports startups, researchers, and innovators. Our mission is to streamline collaboration through high-tech labs, event spaces, and data-backed performance insights.",
     "card1": "Smart Booking System",
     "card1desc": "Real-time seat and venue availability with instant booking feedback.",
@@ -18,7 +18,7 @@
   },
 
   "navbar": {
-    "title": "Galala Innovation Park",
+    "title": "Galala Event Management System",
     "role": "Role",
     "logout": "Logout",
     "login": "Login",
@@ -41,8 +41,8 @@
   },
 
   "footer": {
-    "copyright": "Galala Innovation Park | All rights reserved.",
-    "powered": "Powered by Edaretna Management System"
+    "copyright": "Galala Event Management System | All rights reserved.",
+    "powered": "Powered by Eventify"
   },
 
   "roles": {
@@ -330,7 +330,7 @@
   },
 
   "about": {
-    "title": "About Galala Innovation Park",
+    "title": "About Galala Event Management System",
     "subtitle": "Galala Innovation Park is a dynamic space designed to empower creativity, innovation, and sustainable development.",
     "header1": "🎯 Our Vision",
     "subheader1": "To become Egypt’s leading hub for tech innovation and collaboration, bridging academia and industry.",
@@ -342,7 +342,7 @@
     "subheader5": "Admin dashboards for employees",
     "subheader6": "Support for innovation events and training",
     "header4": "📞 Contact Us",
-    "subheader7": "info@gipark.com",
+    "subheader7": "info@gu.com",
     "subheader8": "+20 123-456-7890",
     "subheader9": "Galala City, Egypt",
     "email": "Email:",

@@ -31,7 +31,7 @@ const MyBookings = () => {
   }, []);
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.myBookings')}`;
+    document.title = `GEMS - ${t('titles.myBookings')}`;
   }, [t]);
 
   const fetchBookings = async () => {

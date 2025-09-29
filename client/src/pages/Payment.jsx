@@ -31,7 +31,7 @@ const Payment = () => {
   const { t } = useTranslation();
 
     useEffect(() => {
-    document.title = `GIP - ${t('titles.payment')}`;
+    document.title = `GEMS - ${t('titles.payment')}`;
   }, [t]);
 
   const totalPrice = type === 'venue'

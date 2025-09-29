@@ -80,7 +80,7 @@ const Metrics = () => {
 }, [data]);
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.metrics')}`;
+    document.title = `GEMS - ${t('titles.metrics')}`;
   }, [t]);
 
   const getTrend = (nowList, type, lastList) => {

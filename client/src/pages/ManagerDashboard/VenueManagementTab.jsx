@@ -40,7 +40,7 @@ const VenueManagementTab = () => {
   }, []);
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.mgmtDashboard')}`;
+    document.title = `GEMS - ${t('titles.mgmtDashboard')}`;
   }, [t]);
 
   const fetchVenues = async () => {

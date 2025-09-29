@@ -15,7 +15,7 @@ const ManagerDashboard = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.mgmtDashboard')}`;
+    document.title = `GEMS - ${t('titles.mgmtDashboard')}`;
   }, [t]);
 
   return (

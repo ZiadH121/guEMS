@@ -12,7 +12,7 @@ const Home = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.home')}`;
+    document.title = `GEMS - ${t('titles.home')}`;
   }, [t]);
   
   return (

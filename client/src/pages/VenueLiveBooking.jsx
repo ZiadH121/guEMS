@@ -22,7 +22,7 @@ const VenueLiveBooking = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.venueLiveBook')}`;
+    document.title = `GEMS - ${t('titles.venueLiveBook')}`;
   }, [t]);
 
   useEffect(() => {

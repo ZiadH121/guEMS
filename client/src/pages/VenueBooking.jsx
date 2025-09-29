@@ -15,7 +15,7 @@ const VenueBooking = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.venueBook')}`;
+    document.title = `GEMS - ${t('titles.venueBook')}`;
 
     const fetchVenues = async () => {
       try {

@@ -9,7 +9,7 @@ const NotFound = () => {
     const { t } = useTranslation();
   
   useEffect(() => {
-    document.title = `GIP - ${t('titles.notFound')}`;
+    document.title = `GEMS - ${t('titles.notFound')}`;
   }, [t]);
 
   return (

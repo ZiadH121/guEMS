@@ -13,7 +13,7 @@ const TicketBooking = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.tickets')}`;
+    document.title = `GEMS - ${t('titles.tickets')}`;
   }, [t]);  
 
   useEffect(() => {

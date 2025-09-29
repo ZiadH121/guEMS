@@ -22,7 +22,7 @@ const BookingConfirmation = () => {
   };
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.bookConfirm')}`;
+    document.title = `GEMS - ${t('titles.bookConfirm')}`;
   }, [t]);
 
   return (

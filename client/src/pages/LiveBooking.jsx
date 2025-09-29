@@ -68,7 +68,7 @@ const LiveBooking = () => {
   }, [event]);
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.liveBook')}`;
+    document.title = `GEMS - ${t('titles.liveBook')}`;
   }, [t]);
   
   const handleClick = (seat) => {

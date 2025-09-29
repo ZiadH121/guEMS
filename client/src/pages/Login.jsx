@@ -55,7 +55,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    document.title = `GIP - ${t('titles.login')}`;
+    document.title = `GEMS - ${t('titles.login')}`;
   }, [t]);
 
   return (
