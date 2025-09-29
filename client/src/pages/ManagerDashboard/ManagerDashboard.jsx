@@ -27,8 +27,8 @@ const ManagerDashboard = () => {
       <h2 className="text-center text-brown mb-4">{t('mgmtDash.title')}</h2>
 
       <Tabs defaultActiveKey="placeholder" className="mb-3 custom-tabs" fill>
-      <Tab eventKey="placeholder" title="Proposals (coming soon)">
-        <p className="text-center py-5">Proposal system will appear here.</p>
+      <Tab eventKey="proposals" title={t('mgmtDash.proposals')}>
+        <p className="text-center py-5">{t('proposal.reviewPlaceholder')}</p>
       </Tab>
       {/*
       <Tab eventKey="users" title={t('mgmtDash.userMgmt')}>

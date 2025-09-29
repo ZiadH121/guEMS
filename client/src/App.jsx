@@ -56,6 +56,7 @@ const AppLayout = () => {
           {/* <Route path="/metrics" element={<ProtectedRoute requiredRole="staff"><Metrics /></ProtectedRoute>} /> */}
           {/* <Route path="/my-bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} /> */}
           <Route path="/manager" element={<ProtectedRoute><ManagerDashboard /></ProtectedRoute>} />
+          <Route path="/submit-proposal" element={<ProtectedRoute><SubmitProposal /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -1,0 +1,61 @@
+// SubmitProposal.jsx
+import React, { useState } from 'react';
+import { Form, Button, Container, Alert } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { apiFetch } from '../utils/api';
+
+const SubmitProposal = () => {
+  const { t } = useTranslation();
+  const [form, setForm] = useState({ title: '', description: '', capacity: '', venue: '', date: '' });
+  const [message, setMessage] = useState('');
+
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      const res = await apiFetch('/proposals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+        body: JSON.stringify(form)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setMessage(t('proposal.submitted'));
+    } catch (err) {
+      setMessage(err.message);
+    }
+  };
+
+  return (
+    <Container className="py-5">
+      <h2 className="mb-4">{t('proposal.submitTitle')}</h2>
+      {message && <Alert variant="info">{message}</Alert>}
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>{t('proposal.title')}</Form.Label>
+          <Form.Control name="title" value={form.title} onChange={handleChange} required />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>{t('proposal.description')}</Form.Label>
+          <Form.Control as="textarea" name="description" value={form.description} onChange={handleChange} required />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>{t('proposal.capacity')}</Form.Label>
+          <Form.Control type="number" name="capacity" value={form.capacity} onChange={handleChange} required />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>{t('proposal.venue')}</Form.Label>
+          <Form.Control name="venue" value={form.venue} onChange={handleChange} required />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>{t('proposal.date')}</Form.Label>
+          <Form.Control type="date" name="date" value={form.date} onChange={handleChange} required />
+        </Form.Group>
+        <Button type="submit" className="btn btn-primary">{t('proposal.submitButton')}</Button>
+      </Form>
+    </Container>
+  );
+};
+
+export default SubmitProposal;
