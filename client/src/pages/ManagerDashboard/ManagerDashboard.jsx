@@ -26,23 +26,25 @@ const ManagerDashboard = () => {
 
       <h2 className="text-center text-brown mb-4">{t('mgmtDash.title')}</h2>
 
-      <Tabs defaultActiveKey="users" className="mb-3 custom-tabs" fill>
-        <Tab eventKey="users" title={t('mgmtDash.userMgmt')}>
-          <UserManagementTab />
-        </Tab>
-
-        <Tab eventKey="venues" title={t('mgmtDash.venueMgmt')}>
-          <VenueManagementTab />
-        </Tab>
-
-        <Tab eventKey="bookings" title={t('mgmtDash.bookingMgmt')}>
+      <Tabs defaultActiveKey="placeholder" className="mb-3 custom-tabs" fill>
+      <Tab eventKey="placeholder" title="Proposals (coming soon)">
+        <p className="text-center py-5">Proposal system will appear here.</p>
+      </Tab>
+      {/*
+      <Tab eventKey="users" title={t('mgmtDash.userMgmt')}>
+        <UserManagementTab />
+      </Tab>
+      <Tab eventKey="venues" title={t('mgmtDash.venueMgmt')}>
+        <VenueManagementTab />
+      </Tab>
+      <Tab eventKey="bookings" title={t('mgmtDash.bookingMgmt')}>
         <BookingManagementTab />
-        </Tab>
-
-        <Tab eventKey="feedback" title={t('mgmtDash.feedbackMgmt')}>
-          <FeedbackManagementTab />
-        </Tab>
-      </Tabs>
+      </Tab>
+      <Tab eventKey="feedback" title={t('mgmtDash.feedbackMgmt')}>
+        <FeedbackManagementTab />
+      </Tab>
+      */}
+    </Tabs>
     </Container>
   );
 };

@@ -28,11 +28,11 @@ const Home = () => {
               <Link to="/venue-booking" style={heroButton}>{t('home.reserveVenue')}</Link>
             )}
 
-            <Link to="/my-bookings" style={heroButton}>{t('home.myBookings')}</Link>
+            {/* <Link to="/my-bookings" style={heroButton}>{t('home.myBookings')}</Link> */}
 
             {user.role === 'staff' && (
               <>
-                <Link to="/metrics" style={heroButton}>{t('home.viewMetrics')}</Link>
+                {/* <Link to="/metrics" style={heroButton}>{t('home.viewMetrics')}</Link> */}
                 <Link to="/manager" style={heroButton}>{t('home.adminPanel')}</Link>
               </>
             )}

@@ -38,7 +38,7 @@ const AppLayout = () => {
   return (
     <div className="page-wrapper">
       <Navbar />
-      {!isAuthPage && <MiniSidebar />}
+      {/* {!isAuthPage && <MiniSidebar />} */}
       <NotificationsPopup />
 
       <main className="main-content">
@@ -52,9 +52,9 @@ const AppLayout = () => {
           <Route path="/VenueLiveBooking" element={token ? <VenueLiveBooking /> : <Navigate to="/login" />} />
           <Route path="/payment" element={token ? <Payment /> : <Navigate to="/login" />} />
           <Route path="/booking-confirmation" element={token ? <BookingConfirmation /> : <Navigate to="/login" />} />
-          <Route path="/about" element={token ? <About /> : <Navigate to="/login" />} />
-          <Route path="/metrics" element={<ProtectedRoute requiredRole="staff"><Metrics /></ProtectedRoute>} />
-          <Route path="/my-bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
+          {/* <Route path="/about" element={token ? <About /> : <Navigate to="/login" />} /> */}
+          {/* <Route path="/metrics" element={<ProtectedRoute requiredRole="staff"><Metrics /></ProtectedRoute>} /> */}
+          {/* <Route path="/my-bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} /> */}
           <Route path="/manager" element={<ProtectedRoute><ManagerDashboard /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>

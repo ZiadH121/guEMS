@@ -34,9 +34,9 @@ const AppNavbar = () => {
     { path: '/', label: t('navbar.home') },
     { path: '/ticket-booking', label: t('navbar.bookTickets') },
     { path: '/venue-booking', label: t('navbar.bookVenue') },
-    { path: '/metrics', label: t('navbar.metrics') },
-    { path: '/about', label: t('navbar.about') },
-    { path: '/my-bookings', label: t('navbar.myBookings') },
+    // { path: '/metrics', label: t('navbar.metrics') },
+    // { path: '/about', label: t('navbar.about') },
+    // { path: '/my-bookings', label: t('navbar.myBookings') },
     { path: '/manager', label: t('navbar.managerPanel') }
   ];
 
@@ -142,7 +142,7 @@ const AppNavbar = () => {
                   </Nav.Link>
                 </>
               )}
-              <LanguageSwitcher />
+              {/* <LanguageSwitcher /> */}
             </Nav>
           </Navbar.Collapse>
         </Container>
