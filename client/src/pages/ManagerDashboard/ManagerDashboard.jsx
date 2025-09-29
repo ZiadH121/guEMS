@@ -5,10 +5,10 @@ import React, { useEffect } from 'react';
 import { Tabs, Tab, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import UserManagementTab from './UserManagementTab';
-import VenueManagementTab from './VenueManagementTab';
-import FeedbackManagementTab from './FeedbackManagementTab';
-import BookingManagementTab from './BookingManagementTab';
+// import UserManagementTab from './UserManagementTab';
+// import VenueManagementTab from './VenueManagementTab';
+// import FeedbackManagementTab from './FeedbackManagementTab';
+// import BookingManagementTab from './BookingManagementTab';
 
 const ManagerDashboard = () => {
   const navigate = useNavigate();

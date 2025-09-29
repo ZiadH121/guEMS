@@ -23,6 +23,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import MyBookings from './pages/MyBookings';
 import NotificationsPopup from './pages/NotificationsPopup';
 import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
+import SubmitProposal from './pages/SubmitProposal';
 
 const AppLayout = () => {
   const location = useLocation();
