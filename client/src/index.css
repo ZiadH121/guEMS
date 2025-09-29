@@ -80,7 +80,7 @@
     font-family: inherit;
     border: none;
     cursor: pointer;
-    background-color: #623E2A;
+    background-color: #243D8F;
     color: #fff;
     padding: 10px 20px;
     border-radius: 6px;
@@ -88,11 +88,11 @@
   }
   
   button:hover {
-    background-color: #4a2e1f;
+    background-color: #9BCB61;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    color: #623E2A;
+    color: #243D8F;
     font-weight: 600;
     line-height: 1.2;
     margin-bottom: 10px;
@@ -133,29 +133,30 @@
   footer {
     text-align: center;
     padding: 30px;
-    color: #999;
+    background-color: 243D8F;
+    color: white;
     font-size: 14px;
   }
 
   .text-brown {
-    color: #623E2A;
+    color: #243D8F;
   }
   
   .bg-brown {
-    background-color: #623E2A !important;
+    background-color: #243D8F !important;
     color: white !important;
   }
   
   .bg-brown:hover {
-    background-color: #4a2e1f !important;
+    background-color: #1b2a63 !important;
   }
   
   .bg-custom {
-    background-color: #543524 !important;
+    background-color: #9BCB61 !important;
   }
   
   .custom-navbar {
-    background-color: #543524 !important;
+    background-color: #243D8F !important;
   }
   
   .custom-navbar .nav-link,
@@ -164,7 +165,7 @@
   }
   
   .custom-navbar .nav-link.active {
-    color: #f9d875 !important;
+    color: #9BCB61 !important;
   }
 
   .sidebar {
@@ -174,7 +175,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    background-color: #543524;
+    background-color: #243D8F;
     padding: 10px 8px 10px 8px;
     border-radius: 0 10px 10px 0;
     box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
@@ -194,7 +195,7 @@
   }
   
   .sidebar-link:hover {
-    background-color: #eee;
+    background-color: #9BCB61;
   }
   
   .icon-label {
@@ -239,7 +240,7 @@ button:hover,
 }
 
 .accordion-button {
-  background-color: #cbb6a2 !important;
+  background-color: #9BCB61 !important;
   color: #2d2118 !important;
   font-weight: 600;
   border-radius: 8px 8px 0 0;
@@ -251,7 +252,7 @@ button:hover,
 }
 
 .accordion-button:not(.collapsed) {
-  background-color: #b29b7e !important;
+  background-color: #7AAE47 !important;
   color: #221b14 !important;
 }
 
