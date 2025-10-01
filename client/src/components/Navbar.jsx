@@ -97,7 +97,7 @@ const AppNavbar = () => {
                     if (link.path === '/venue-booking' && isVisitor) return null;
                     if (link.path === '/metrics' && user.role !== 'staff') return null;
                     if (link.path === '/manager' && user.role !== 'staff') return null;
-                    if (link.path === '/submit-proposal' && user.role !== 'organizer') return null;
+                    if (link.path === '/submit-proposal' && isVisitor) return null;
 
                     return (
                       <Nav.Link
