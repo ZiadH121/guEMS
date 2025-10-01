@@ -88,7 +88,7 @@ const SubmitProposal = () => {
           <Form.Label>{t('proposal.date')}</Form.Label>
           <Form.Control type="date" name="date" value={form.date} onChange={handleChange} required />
         </Form.Group>
-        <Button type="submit" className="btn btn-primary">{t('proposal.submitButton')}</Button>
+        <Button type="submit" className="btn bg-brown">{t('proposal.submitButton')}</Button>
       </Form>
     </Container>
   );
