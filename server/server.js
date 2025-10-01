@@ -7,7 +7,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const cron = require('node-cron');
-const cleanupExpiredBookings = require('./tasks/cleanup');
+// const cleanupExpiredBookings = require('./tasks/cleanup');
 const i18n = require('./i18n');
 
 console.log('Loaded MONGO_URI:', process.env.MONGO_URI);
@@ -36,7 +36,6 @@ app.options('*', cors());
 app.use(express.json());
 app.use(i18n.init);
 
-// Optional: Logging
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.path}`);
   next();
@@ -87,7 +86,7 @@ mongoose.connect(process.env.MONGO_URI, {
   console.error('MongoDB connection error:', err);
 });
 
-cron.schedule('* * * * *', async () => {
-  console.log('[CRON] Running expired booking cleanup...');
-  await cleanupExpiredBookings();
-});
+// cron.schedule('* * * * *', async () => {
+//   console.log('[CRON] Running expired booking cleanup...');
+//   await cleanupExpiredBookings();
+// });

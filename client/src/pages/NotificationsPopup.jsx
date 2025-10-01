@@ -41,9 +41,9 @@ const NotificationPopup = () => {
       }
     };
 
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 10000);
-    return () => clearInterval(interval);
+    // fetchNotifications();
+    // const interval = setInterval(fetchNotifications, 10000);
+    // return () => clearInterval(interval);
   }, []);
 
   const handleClose = (id) => {
