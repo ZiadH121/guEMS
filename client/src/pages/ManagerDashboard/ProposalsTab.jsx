@@ -1,6 +1,6 @@
 // ProposalsTab.jsx
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Alert, Spinner } from 'react-bootstrap';
+import { Table, Button, Alert, Spinner, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { apiFetch } from '../../utils/api';
 
@@ -9,6 +9,8 @@ const ProposalsTab = () => {
   const [proposals, setProposals] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDescription, setSelectedDescription] = useState('');
 
   const fetchProposals = async () => {
     try {
@@ -54,6 +56,7 @@ const ProposalsTab = () => {
         <thead>
           <tr>
             <th>{t('proposal.colTitle')}</th>
+            <th>{t('proposal.colDescription')}</th>
             <th>{t('proposal.colProposer')}</th>
             <th>{t('proposal.colVenue')}</th>
             <th>{t('proposal.colDate')}</th>
@@ -69,7 +72,23 @@ const ProposalsTab = () => {
             proposals.map(p => (
               <tr key={p._id}>
                 <td>{p.title}</td>
-                <td>{p.proposer?.name} ({p.proposer?.email})</td>
+                <td>
+                    {p.description && p.description.length > 50
+                        ? (
+                        <>
+                            {p.description.slice(0, 50)}...
+                            <Button
+                            variant="link"
+                            size="sm"
+                            onClick={() => { setSelectedDescription(p.description); setShowModal(true); }}
+                            >
+                            {t('proposal.readMore')}
+                            </Button>
+                        </>
+                        )
+                        : p.description || '—'}
+                    </td>
+                <td>{p.proposer?.name}</td>
                 <td>{p.venue?.name || '—'}</td>
                 <td>{new Date(p.date).toLocaleDateString()}</td>
                 <td>{p.capacity}</td>
@@ -93,6 +112,21 @@ const ProposalsTab = () => {
           )}
         </tbody>
       </Table>
+        
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+            <Modal.Title>{t('proposal.fullDescription')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <p>{selectedDescription}</p>
+        </Modal.Body>
+        <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+            {t('proposal.close')}
+            </Button>
+        </Modal.Footer>
+        </Modal>
+
     </div>
   );
 };
