@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 // import VenueManagementTab from './VenueManagementTab';
 // import FeedbackManagementTab from './FeedbackManagementTab';
 // import BookingManagementTab from './BookingManagementTab';
+import ProposalsTab from './ProposalsTab';
 
 const ManagerDashboard = () => {
   const navigate = useNavigate();
@@ -26,9 +27,9 @@ const ManagerDashboard = () => {
 
       <h2 className="text-center text-brown mb-4">{t('mgmtDash.title')}</h2>
 
-      <Tabs defaultActiveKey="placeholder" className="mb-3 custom-tabs" fill>
+      <Tabs defaultActiveKey="proposals" className="mb-3 custom-tabs" fill>
       <Tab eventKey="proposals" title={t('mgmtDash.proposals')}>
-        <p className="text-center py-5">{t('proposal.reviewPlaceholder')}</p>
+        <ProposalsTab />
       </Tab>
       {/*
       <Tab eventKey="users" title={t('mgmtDash.userMgmt')}>

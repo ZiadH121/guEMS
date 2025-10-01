@@ -567,23 +567,23 @@
   },
 
   "proposal": {
-  "submitTitle": "Submit a Proposal",
-  "title": "Title",
-  "description": "Description",
-  "capacity": "Capacity",
-  "venue": "Venue",
-  "date": "Date",
-  "submitButton": "Submit Proposal",
-  "submitted": "Your proposal has been submitted for review.",
-  "submitError": "Error submitting proposal.",
-  "fetchError": "Error fetching proposals.",
-  "notFound": "Proposal not found.",
-  "approved": "Proposal approved and event created.",
-  "approveError": "Error approving proposal.",
-  "rejected": "Proposal rejected.",
-  "rejectError": "Error rejecting proposal.",
-  "reviewPlaceholder": "Proposal review will appear here."
-}
+  "reviewTitle": "Event Proposals",
+  "colTitle": "Title",
+  "colProposer": "Proposer",
+  "colVenue": "Venue",
+  "colDate": "Date",
+  "colCapacity": "Capacity",
+  "colStatus": "Status",
+  "colActions": "Actions",
+  "noProposals": "No proposals submitted yet.",
+  "approveButton": "Approve",
+  "rejectButton": "Reject",
+  "status": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected"
+    }
+  }
 
 
 }
