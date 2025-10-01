@@ -95,5 +95,18 @@
         "venueDeleteFailed": "Failed to delete venue",
         "updated": "Venue updated successfully",
         "updateFail": "Failed to update venue"
+    },
+
+    "proposal": {
+        "submitted": "Proposal submitted successfully.",
+        "submitError": "Error submitting proposal.",
+        "fetchError": "Error fetching proposals.",
+        "notFound": "Proposal not found.",
+        "approved": "Proposal approved and event created.",
+        "approveError": "Error approving proposal.",
+        "rejected": "Proposal rejected.",
+        "rejectError": "Error rejecting proposal.",
+        "invalidVenue": "Selected venue does not exist."
     }
+
 }

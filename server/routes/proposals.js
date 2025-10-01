@@ -5,11 +5,15 @@ const Booking = require('../models/Booking');
 const verifyToken = require('../middleware/auth');
 const requireRole = require('../middleware/requireRole');
 const router = express.Router();
+const Venue = require('../models/Venue'); 
 
-// Submit proposal (Organizer)
 router.post('/', verifyToken, async (req, res) => {
   try {
     const { title, description, capacity, venue, date } = req.body;
+    const venueDoc = await Venue.findById(venue);
+    if (!venueDoc) {
+      return res.status(400).json({ error: res.__('proposal.invalidVenue') });
+    }
     const newProposal = new Proposal({
       title,
       description,
@@ -25,7 +29,6 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-// List proposals (Staff only)
 router.get('/', verifyToken, requireRole('staff'), async (req, res) => {
   try {
     const proposals = await Proposal.find().populate('proposer', 'name email').populate('venue', 'name');
@@ -35,7 +38,6 @@ router.get('/', verifyToken, requireRole('staff'), async (req, res) => {
   }
 });
 
-// Approve proposal (Staff only)
 router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res) => {
   try {
     const proposal = await Proposal.findById(req.params.id);
@@ -44,7 +46,6 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
     proposal.status = 'approved';
     await proposal.save();
 
-    // Auto-create event booking
     const booking = new Booking({
       type: 'event',
       itemId: proposal.venue,
@@ -64,7 +65,6 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
   }
 });
 
-// Reject proposal (Staff only)
 router.patch('/:id/reject', verifyToken, requireRole('staff'), async (req, res) => {
   try {
     const proposal = await Proposal.findById(req.params.id);
