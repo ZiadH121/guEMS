@@ -117,7 +117,7 @@ const ProposalsTab = () => {
         <Modal.Header closeButton>
             <Modal.Title>{t('proposal.fullDescription')}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', maxHeight: '300px', overflowY: 'auto', size: "lg" }}>
             <p>{selectedDescription}</p>
         </Modal.Body>
         <Modal.Footer>
