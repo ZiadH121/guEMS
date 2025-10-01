@@ -29,7 +29,8 @@
     "metrics": "Metrics",
     "about": "About Us",
     "myBookings": "My Bookings",
-    "managerPanel": "Manager Panel"
+    "managerPanel": "Manager Panel",
+    "submitProposal": "Submit Proposal"
   },
 
   "sidebar": {
@@ -578,6 +579,9 @@
   "noProposals": "No proposals submitted yet.",
   "approveButton": "Approve",
   "rejectButton": "Reject",
+  "selectVenue": "Select a venue",
+  "invalidCapacity": "Capacity must be greater than zero.",
+  "invalidDate": "Date must be in the future.",
   "status": {
     "pending": "Pending",
     "approved": "Approved",

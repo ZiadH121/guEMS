@@ -37,7 +37,8 @@ const AppNavbar = () => {
     // { path: '/metrics', label: t('navbar.metrics') },
     // { path: '/about', label: t('navbar.about') },
     // { path: '/my-bookings', label: t('navbar.myBookings') },
-    { path: '/manager', label: t('navbar.managerPanel') }
+    { path: '/manager', label: t('navbar.managerPanel') },
+    { path: '/submit-proposal', label: t('navbar.submitProposal'), role: 'organizer' },
   ];
 
   const LanguageSwitcher = () => {
@@ -96,6 +97,7 @@ const AppNavbar = () => {
                     if (link.path === '/venue-booking' && isVisitor) return null;
                     if (link.path === '/metrics' && user.role !== 'staff') return null;
                     if (link.path === '/manager' && user.role !== 'staff') return null;
+                    if (link.path === '/submit-proposal' && user.role !== 'organizer') return null;
 
                     return (
                       <Nav.Link
