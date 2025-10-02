@@ -23,12 +23,11 @@ const TicketBooking = () => {
         const data = await res.json();
         if (!res.ok) throw new Error();
 
-        const venueBookings = data.filter(b =>
-          b.type === 'venue' &&
+        const events = data.filter(b =>
+          ['venue', 'event'].includes(b.type) &&
           b.status === 'confirmed' &&
           b.details?.event &&
-          b.details?.date &&
-          b.details?.name
+          b.details?.date
         );
 
         const grouped = {};
@@ -127,9 +126,25 @@ const TicketBooking = () => {
                     )}
                     <Card.Body>
                       <Card.Title>{event.event}</Card.Title>
-                      <Card.Text><strong>{t('tickets.cardDate')}</strong> {event.date}</Card.Text>
-                      <Card.Text><strong>{t('tickets.cardTime')}</strong> {formatTimeRange(event.times)}</Card.Text>
-                      <Card.Text><strong>{t('tickets.cardVenue')}</strong> {event.name}</Card.Text>
+                      <Card.Text>
+                        {event.description
+                          ? event.description.slice(0, 100) + (event.description.length > 100 ? '...' : '')
+                          : t('ticketBooking.noDescription')}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>{t('ticketBooking.date')}:</strong> {new Date(event.date).toLocaleDateString()}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>{t('tickets.cardTime')}</strong> {formatTimeRange(event.times)}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>{t('tickets.cardVenue')}</strong> {event.name}
+                      </Card.Text>
+                      {event.capacity && (
+                        <Card.Text>
+                          <strong>{t('ticketBooking.capacity')}:</strong> {event.capacity}
+                        </Card.Text>
+                      )}
                       <Card.Text>
                         <strong>{t('tickets.cardStatus')}</strong>{' '}
                         {availabilityMap[event._id] ? (

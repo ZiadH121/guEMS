@@ -505,7 +505,10 @@
     "cardStatusBooked": "Fully Booked",
     "cardStatusAvailable": "Available",
     "loading": "Loading...",
-    "bookButton": "Book Now"
+    "bookButton": "Book Now",
+    "noDescription": "No description provided.",
+    "capacity": "Capacity",
+    "date": "Date"
   },
 
   "venueBooking": {

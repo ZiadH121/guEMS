@@ -135,7 +135,7 @@ router.get('/bookings', verifyToken, async (req, res) => {
 router.get('/events/public', async (req, res) => {
   try {
     const bookings = await Booking.find({
-      type: 'venue',
+      type: { $in: ['venue', 'event'] },
       status: 'confirmed',
       'details.event': { $exists: true }
     }).sort({ createdAt: -1 });

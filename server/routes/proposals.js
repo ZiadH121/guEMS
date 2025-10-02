@@ -51,6 +51,8 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
       itemId: proposal.venue,
       details: {
         event: proposal.title,
+        description: proposal.description,
+        venue: proposal.venue,
         date: proposal.date,
         capacity: proposal.capacity
       },
