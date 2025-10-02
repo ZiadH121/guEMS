@@ -130,10 +130,10 @@ const TicketBooking = () => {
                       <Card.Text>
                         {event.description
                           ? event.description.slice(0, 100) + (event.description.length > 100 ? '...' : '')
-                          : t('ticketBooking.noDescription')}
+                          : t('tickets.noDescription')}
                       </Card.Text>
                       <Card.Text>
-                        <strong>{t('ticketBooking.date')}:</strong> {new Date(event.date).toLocaleDateString()}
+                        <strong>{t('tickets.date')}:</strong> {new Date(event.date).toLocaleDateString()}
                       </Card.Text>
                       <Card.Text>
                         <strong>{t('tickets.cardTime')}</strong> {formatTimeRange(event.times)}
@@ -143,7 +143,7 @@ const TicketBooking = () => {
                       </Card.Text>
                       {event.capacity && (
                         <Card.Text>
-                          <strong>{t('ticketBooking.capacity')}:</strong> {event.capacity}
+                          <strong>{t('tickets.capacity')}:</strong> {event.capacity}
                         </Card.Text>
                       )}
                       <Card.Text>
