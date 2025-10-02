@@ -31,15 +31,16 @@ const TicketBooking = () => {
         );
 
         const grouped = {};
-        for (const b of venueBookings) {
-          const key = `${b.details.event}__${b.details.date}__${b.details.name}`;
+        for (const b of events) {
+          const key = `${b.details.event}__${b.details.date}__${b.details.venue || ''}`;
           if (!grouped[key]) {
             grouped[key] = {
               ...b.details,
-              times: [b.details.time],
-              _id: b._id
+              times: b.details.time ? [b.details.time] : [],
+              _id: b._id,
+              image: b.details.image || null
             };
-          } else {
+          } else if (b.details.time) {
             grouped[key].times.push(b.details.time);
           }
         }
