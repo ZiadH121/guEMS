@@ -1,4 +1,4 @@
-// CreateEvent.jsx (formerly VenueBooking.jsx)
+// CreateEvent.jsx
 // Allows staff/admins to create confirmed events directly
 
 import React, { useState, useEffect } from 'react';
@@ -52,8 +52,15 @@ const CreateEvent = () => {
     setLoading(true);
     setMessage({ type: '', text: '' });
 
-    if (!form.name || !form.venue || !form.date) {
-      setMessage({ type: 'danger', text: t('venueBook.error1') });
+    if (
+      !form.name ||
+      !form.description ||
+      !form.venue ||
+      !form.date ||
+      !form.capacity ||
+      !form.price
+    ) {
+      setMessage({ type: 'danger', text: t('createEvent.error') });
       setLoading(false);
       return;
     }
@@ -62,14 +69,14 @@ const CreateEvent = () => {
       const selectedVenue = venues.find((v) => v._id === form.venue);
       const body = {
         type: 'event',
-        itemId: form.venue,
+        itemId: `${selectedVenue?.name || 'Unknown Venue'}_${Date.now()}`, // unique ID
         details: {
           event: form.name,
           description: form.description,
           venue: selectedVenue?.name || 'Unknown',
           date: form.date,
-          capacity: form.capacity || selectedVenue?.capacity || 0,
-          price: form.price,
+          capacity: Number(form.capacity),
+          price: Number(form.price),
           image: form.image
         },
         status: 'confirmed'
@@ -98,7 +105,10 @@ const CreateEvent = () => {
         image: ''
       });
     } catch (err) {
-      setMessage({ type: 'danger', text: err.message || t('createEvent.error') });
+      setMessage({
+        type: 'danger',
+        text: err.message || t('createEvent.error')
+      });
     } finally {
       setLoading(false);
     }
@@ -113,7 +123,9 @@ const CreateEvent = () => {
           </Button>
         </div>
 
-        <h2 className="text-center text-brown mb-4">{t('createEvent.title')}</h2>
+        <h2 className="text-center text-brown mb-4">
+          {t('createEvent.title')}
+        </h2>
 
         {message.text && (
           <Alert variant={message.type} className="text-center">
@@ -141,6 +153,7 @@ const CreateEvent = () => {
               name="description"
               value={form.description}
               onChange={handleChange}
+              required
             />
           </Form.Group>
 
@@ -155,7 +168,7 @@ const CreateEvent = () => {
               <option value="">{t('createEvent.venue')}</option>
               {venues.map((v) => (
                 <option key={v._id} value={v._id}>
-                  {v.name} ({v.date})
+                  {v.name}
                 </option>
               ))}
             </Form.Select>
@@ -179,6 +192,7 @@ const CreateEvent = () => {
               name="capacity"
               value={form.capacity}
               onChange={handleChange}
+              required
               placeholder="e.g. 100"
             />
           </Form.Group>
@@ -186,11 +200,12 @@ const CreateEvent = () => {
           <Form.Group className="mb-3">
             <Form.Label>{t('createEvent.price')}</Form.Label>
             <Form.Control
-              type="text"
+              type="number"
               name="price"
               value={form.price}
               onChange={handleChange}
-              placeholder="e.g. 100 EGP"
+              required
+              placeholder="e.g. 100"
             />
           </Form.Group>
 
@@ -213,11 +228,7 @@ const CreateEvent = () => {
             >
               {loading ? (
                 <>
-                  <Spinner
-                    animation="border"
-                    size="sm"
-                    className="me-2"
-                  />{' '}
+                  <Spinner animation="border" size="sm" className="me-2" />{' '}
                   {t('createEvent.submitButton')}
                 </>
               ) : (
