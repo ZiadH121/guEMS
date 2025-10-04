@@ -564,7 +564,7 @@
     "payment": "Payment",
     "register": "Register",
     "tickets": "Ticket Booking",
-    "venueBook": "Venue Booking",
+    "createEvent": "Event Creation",
     "venueLiveBook": "Venue Live Booking"
   },
 

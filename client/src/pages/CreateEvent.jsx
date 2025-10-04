@@ -11,6 +11,10 @@ const CreateEvent = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.title = `GEMS - ${t('titles.createEvent')}`;
+  }, [t]);
+
   const [venues, setVenues] = useState([]);
   const [form, setForm] = useState({
     name: '',
