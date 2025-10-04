@@ -543,7 +543,7 @@
     "venue": "Select Venue",
     "date": "Date",
     "capacity": "Capacity",
-    "price": "Price (optional)",
+    "price": "Price",
     "image": "Image URL (optional)",
     "submitButton": "Create Event",
     "success": "Event created successfully.",

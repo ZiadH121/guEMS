@@ -42,6 +42,21 @@ router.post('/bookings', verifyToken, async (req, res) => {
   try {
     const cutoff = new Date(Date.now() - 15 * 60 * 1000);
 
+    if (req.user.role === 'staff' && type === 'event') {
+      const booking = new Booking({
+        user: req.user.id,
+        type,
+        itemId,
+        details,
+        status: 'confirmed'
+      });
+
+      await booking.save();
+      return res
+        .status(201)
+        .json({ message: res.__('bookings.successfulBooking'), booking });
+    }
+
     if (type === 'venue' && Array.isArray(details.slots)) {
       const bookings = [];
 
@@ -57,7 +72,9 @@ router.post('/bookings', verifyToken, async (req, res) => {
         });
 
         if (existing) {
-          console.warn(`[Duplicate Blocked] User ${req.user.id} already has booking for ${slotTime}`);
+          console.warn(
+            `[Duplicate Blocked] User ${req.user.id} already has booking for ${slotTime}`
+          );
           continue;
         }
 
@@ -78,7 +95,9 @@ router.post('/bookings', verifyToken, async (req, res) => {
         bookings.push(booking);
       }
 
-      return res.status(201).json({ message: res.__('bookings.successfulBooking'), bookings });
+      return res
+        .status(201)
+        .json({ message: res.__('bookings.successfulBooking'), bookings });
     }
 
     const existing = await Booking.findOne({
@@ -120,7 +139,7 @@ router.get('/bookings', verifyToken, async (req, res) => {
       .populate('venueRef', '_id')
       .sort({ createdAt: -1 });
 
-    const filtered = bookings.filter(b => {
+    const filtered = bookings.filter((b) => {
       if (b.type !== 'venue') return true;
       return b.venueRef !== null;
     });
@@ -147,12 +166,10 @@ router.get('/events/public', async (req, res) => {
   }
 });
 
-
 router.delete('/bookings/:id', verifyToken, async (req, res) => {
   try {
     const isAdmin = req.user.role === 'staff' || req.user.role === 'admin';
 
-    
     const booking = await Booking.findOne(
       isAdmin
         ? { _id: req.params.id }
