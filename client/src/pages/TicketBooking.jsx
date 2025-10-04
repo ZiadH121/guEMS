@@ -14,7 +14,7 @@ const TicketBooking = () => {
 
   useEffect(() => {
     document.title = `GEMS - ${t('titles.tickets')}`;
-  }, [t]);  
+  }, [t]);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -23,11 +23,12 @@ const TicketBooking = () => {
         const data = await res.json();
         if (!res.ok) throw new Error();
 
-        const events = data.filter(b =>
-          ['venue', 'event'].includes(b.type) &&
-          b.status === 'confirmed' &&
-          b.details?.event &&
-          b.details?.date
+        const events = data.filter(
+          (b) =>
+            ['venue', 'event'].includes(b.type) &&
+            b.status === 'confirmed' &&
+            b.details?.event &&
+            b.details?.date
         );
 
         const grouped = {};
@@ -36,18 +37,27 @@ const TicketBooking = () => {
           if (!grouped[key]) {
             grouped[key] = {
               ...b.details,
-              times: b.details.time ? [b.details.time] : [],
+              venue: b.details.venue || 'N/A',
+              capacity: b.details.capacity || 0,
+              times: b.details.slots
+                ? [...b.details.slots]
+                : b.details.time
+                ? [b.details.time]
+                : [],
               _id: b._id,
-              image: b.details.image || null
+              image: b.details.image || null,
             };
-          } else if (b.details.time) {
-            grouped[key].times.push(b.details.time);
+          } else if (b.details.time || b.details.slots) {
+            const newTimes = b.details.slots
+              ? [...b.details.slots]
+              : [b.details.time];
+            grouped[key].times.push(...newTimes);
           }
         }
 
-        const result = Object.values(grouped).map(e => ({
+        const result = Object.values(grouped).map((e) => ({
           ...e,
-          times: [...new Set(e.times)].sort()
+          times: [...new Set(e.times)].sort(),
         }));
 
         setGroupedEvents(result);
@@ -64,14 +74,14 @@ const TicketBooking = () => {
       const availabilityData = {};
 
       for (const event of groupedEvents) {
-        const id = `${event.name}__${event.date}__${event.times.join(' - ')}`;
+        const id = `${event.event}__${event.date}__${event.venue}`;
         try {
           const res = await apiFetch(`/availability/event/${encodeURIComponent(id)}`);
           const data = await res.json();
 
           if (res.ok && Array.isArray(data.seats)) {
-            const booked = data.seats.filter(s => s.status === 'booked').length;
-            const capacity = data.seats.length;
+            const booked = data.seats.filter((s) => s.status === 'booked').length;
+            const capacity = data.seats.length || event.capacity;
             availabilityData[event._id] = { booked, capacity };
           }
         } catch (err) {
@@ -129,37 +139,47 @@ const TicketBooking = () => {
                       <Card.Title>{event.event}</Card.Title>
                       <Card.Text>
                         {event.description
-                          ? event.description.slice(0, 100) + (event.description.length > 100 ? '...' : '')
+                          ? event.description.slice(0, 100) +
+                            (event.description.length > 100 ? '...' : '')
                           : t('tickets.noDescription')}
                       </Card.Text>
                       <Card.Text>
-                        <strong>{t('tickets.date')}:</strong> {new Date(event.date).toLocaleDateString()}
+                        <strong>{t('tickets.cardVenue')}</strong> {event.venue}
                       </Card.Text>
                       <Card.Text>
-                        <strong>{t('tickets.cardTime')}</strong> {formatTimeRange(event.times)}
+                        <strong>{t('tickets.date')}:</strong>{' '}
+                        {new Date(event.date).toLocaleDateString()}
                       </Card.Text>
                       <Card.Text>
-                        <strong>{t('tickets.cardVenue')}</strong> {event.name}
+                        <strong>{t('tickets.cardTime')}</strong>{' '}
+                        {formatTimeRange(event.times)}
                       </Card.Text>
-                      {event.capacity && (
-                        <Card.Text>
-                          <strong>{t('tickets.capacity')}:</strong> {event.capacity}
-                        </Card.Text>
-                      )}
+
+                      <Card.Text>
+                        <strong>{t('tickets.capacity')}:</strong>{' '}
+                        {availabilityMap[event._id]?.capacity || event.capacity}
+                      </Card.Text>
+
                       <Card.Text>
                         <strong>{t('tickets.cardStatus')}</strong>{' '}
                         {availabilityMap[event._id] ? (
-                          <span className={
-                            availabilityMap[event._id].booked >= availabilityMap[event._id].capacity
-                              ? 'text-danger'
-                              : 'text-success'
-                          }>
-                            {availabilityMap[event._id].booked >= availabilityMap[event._id].capacity
+                          <span
+                            className={
+                              availabilityMap[event._id].booked >=
+                              availabilityMap[event._id].capacity
+                                ? 'text-danger'
+                                : 'text-success'
+                            }
+                          >
+                            {availabilityMap[event._id].booked >=
+                            availabilityMap[event._id].capacity
                               ? t('tickets.cardStatusBooked')
                               : t('tickets.cardStatusAvailable')}
                           </span>
                         ) : (
-                          <span className="text-muted">{t('tickets.loading')}</span>
+                          <span className="text-muted">
+                            {t('tickets.loading')}
+                          </span>
                         )}
                       </Card.Text>
                     </Card.Body>

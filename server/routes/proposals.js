@@ -40,7 +40,7 @@ router.get('/', verifyToken, requireRole('staff'), async (req, res) => {
 
 router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res) => {
   try {
-    const proposal = await Proposal.findById(req.params.id);
+    const proposal = await Proposal.findById(req.params.id).populate('venue', 'name');
     if (!proposal) return res.status(404).json({ error: res.__('proposal.notFound') });
 
     proposal.status = 'approved';
@@ -48,11 +48,11 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
 
     const booking = new Booking({
       type: 'event',
-      itemId: proposal.venue,
+      itemId: proposal.venue._id,
       details: {
         event: proposal.title,
         description: proposal.description,
-        venue: proposal.venue,
+        venue: proposal.venue.name,
         date: proposal.date,
         capacity: proposal.capacity
       },
