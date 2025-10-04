@@ -63,6 +63,7 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
 
     res.json({ message: res.__('proposal.approved'), proposal });
   } catch (err) {
+    console.error('Proposal approval error:', err);
     res.status(500).json({ error: res.__('proposal.approveError') });
   }
 });

@@ -7,8 +7,7 @@ import { apiFetch } from '../utils/api';
 import { useTranslation } from 'react-i18next';
 
 const TicketBooking = () => {
-  const [groupedEvents, setGroupedEvents] = useState([]);
-  const [availabilityMap, setAvailabilityMap] = useState({});
+  const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -25,42 +24,24 @@ const TicketBooking = () => {
 
         const events = data.filter(
           (b) =>
-            ['venue', 'event'].includes(b.type) &&
+            ['event'].includes(b.type) &&
             b.status === 'confirmed' &&
             b.details?.event &&
+            b.details?.venue &&
             b.details?.date
         );
 
-        const grouped = {};
-        for (const b of events) {
-          const key = `${b.details.event}__${b.details.date}__${b.details.venue || ''}`;
-          if (!grouped[key]) {
-            grouped[key] = {
-              ...b.details,
-              venue: b.details.venue || 'N/A',
-              capacity: b.details.capacity || 0,
-              times: b.details.slots
-                ? [...b.details.slots]
-                : b.details.time
-                ? [b.details.time]
-                : [],
-              _id: b._id,
-              image: b.details.image || null,
-            };
-          } else if (b.details.time || b.details.slots) {
-            const newTimes = b.details.slots
-              ? [...b.details.slots]
-              : [b.details.time];
-            grouped[key].times.push(...newTimes);
-          }
-        }
-
-        const result = Object.values(grouped).map((e) => ({
-          ...e,
-          times: [...new Set(e.times)].sort(),
+        const result = events.map((b) => ({
+          _id: b._id,
+          event: b.details.event,
+          description: b.details.description,
+          venue: b.details.venue,
+          date: b.details.date,
+          capacity: b.details.capacity,
+          image: b.details.image || null,
         }));
 
-        setGroupedEvents(result);
+        setEvents(result);
       } catch (err) {
         console.error('Failed to fetch bookings:', err);
       }
@@ -69,43 +50,8 @@ const TicketBooking = () => {
     fetchBookings();
   }, []);
 
-  useEffect(() => {
-    const fetchAvailability = async () => {
-      const availabilityData = {};
-
-      for (const event of groupedEvents) {
-        const id = `${event.event}__${event.date}__${event.venue}`;
-        try {
-          const res = await apiFetch(`/availability/event/${encodeURIComponent(id)}`);
-          const data = await res.json();
-
-          if (res.ok && Array.isArray(data.seats)) {
-            const booked = data.seats.filter((s) => s.status === 'booked').length;
-            const capacity = data.seats.length || event.capacity;
-            availabilityData[event._id] = { booked, capacity };
-          }
-        } catch (err) {
-          console.warn('Availability check failed for', event.event);
-        }
-      }
-
-      setAvailabilityMap(availabilityData);
-    };
-
-    if (groupedEvents.length > 0) {
-      fetchAvailability();
-    }
-  }, [groupedEvents]);
-
   const handleBook = (eventDetails) => {
     navigate('/live-booking', { state: { event: eventDetails } });
-  };
-
-  const formatTimeRange = (slots) => {
-    if (!Array.isArray(slots) || slots.length === 0) return '';
-    const first = slots[0].split(' - ')[0];
-    const last = slots[slots.length - 1].split(' - ')[1];
-    return `${first} - ${last}`;
   };
 
   return (
@@ -116,13 +62,14 @@ const TicketBooking = () => {
             {t('tickets.backButton')}
           </Button>
         </div>
+
         <h2 className="text-center text-brown mb-4">{t('tickets.title')}</h2>
 
-        {groupedEvents.length === 0 ? (
+        {events.length === 0 ? (
           <p className="text-center text-muted">{t('tickets.noEvents')}</p>
         ) : (
           <Row className="g-4">
-            {groupedEvents
+            {events
               .sort((a, b) => new Date(a.date) - new Date(b.date))
               .map((event, idx) => (
                 <Col md={6} lg={4} key={idx}>
@@ -143,44 +90,18 @@ const TicketBooking = () => {
                             (event.description.length > 100 ? '...' : '')
                           : t('tickets.noDescription')}
                       </Card.Text>
+
                       <Card.Text>
                         <strong>{t('tickets.cardVenue')}</strong> {event.venue}
                       </Card.Text>
+
                       <Card.Text>
                         <strong>{t('tickets.date')}:</strong>{' '}
                         {new Date(event.date).toLocaleDateString()}
                       </Card.Text>
-                      <Card.Text>
-                        <strong>{t('tickets.cardTime')}</strong>{' '}
-                        {formatTimeRange(event.times)}
-                      </Card.Text>
 
                       <Card.Text>
-                        <strong>{t('tickets.capacity')}:</strong>{' '}
-                        {availabilityMap[event._id]?.capacity || event.capacity}
-                      </Card.Text>
-
-                      <Card.Text>
-                        <strong>{t('tickets.cardStatus')}</strong>{' '}
-                        {availabilityMap[event._id] ? (
-                          <span
-                            className={
-                              availabilityMap[event._id].booked >=
-                              availabilityMap[event._id].capacity
-                                ? 'text-danger'
-                                : 'text-success'
-                            }
-                          >
-                            {availabilityMap[event._id].booked >=
-                            availabilityMap[event._id].capacity
-                              ? t('tickets.cardStatusBooked')
-                              : t('tickets.cardStatusAvailable')}
-                          </span>
-                        ) : (
-                          <span className="text-muted">
-                            {t('tickets.loading')}
-                          </span>
-                        )}
+                        <strong>{t('tickets.capacity')}:</strong> {event.capacity}
                       </Card.Text>
                     </Card.Body>
                     <Card.Footer>
