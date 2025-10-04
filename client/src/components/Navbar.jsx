@@ -42,7 +42,7 @@ const AppNavbar = () => {
   const navLinks = [
     { path: '/', label: t('navbar.home') },
     { path: '/ticket-booking', label: t('navbar.bookTickets') },
-    { path: '/venue-booking', label: t('navbar.bookVenue') },
+    { path: '/create-event', label: t('navbar.createEvent') },
     // { path: '/metrics', label: t('navbar.metrics') },
     // { path: '/about', label: t('navbar.about') },
     // { path: '/my-bookings', label: t('navbar.myBookings') },
@@ -107,13 +107,10 @@ const AppNavbar = () => {
               {token ? (
                 <>
                   {navLinks.map((link) => {
-                    if (link.path === '/venue-booking' && isVisitor) return null;
-                    if (link.path === '/metrics' && user.role !== 'staff')
-                      return null;
-                    if (link.path === '/manager' && user.role !== 'staff')
-                      return null;
-                    if (link.path === '/submit-proposal' && isVisitor)
-                      return null;
+                    if (link.path === '/create-event' && user.role !== 'staff') return null;
+                    if (link.path === '/metrics' && user.role !== 'staff') return null;
+                    if (link.path === '/manager' && user.role !== 'staff') return null;
+                    if (link.path === '/submit-proposal' && isVisitor) return null;
 
                     return (
                       <Nav.Link

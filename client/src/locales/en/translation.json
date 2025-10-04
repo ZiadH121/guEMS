@@ -25,7 +25,7 @@
     "register": "Register",
     "home": "Home",
     "bookTickets": "Book Tickets",
-    "bookVenue": "Book Venue",
+    "createEvent": "Create Event",
     "metrics": "Metrics",
     "about": "About Us",
     "myBookings": "My Bookings",
@@ -511,24 +511,6 @@
     "date": "Date"
   },
 
-  "venueBooking": {
-    "backButton": "← Back",
-    "title": "Available Venues",
-    "cardDate": "Date:",
-    "cardCapacity": "Capacity:",
-    "cardStatus": "Booking Status:",
-    "cardPrice": "Price:",
-    "bookButton": "Book Now",
-    "noVenues": "No venues available.",
-    "people": "People",
-    "loading": "Loading...",
-    "status": {
-      "Available": "Available",
-      "Unavailable": "Unavailable",
-      "Booked": "Booked"
-    }
-  },
-
   "venueBook": {
     "error1": "Please enter an event name.",
     "error2": "Please select at least one slot.",
@@ -552,6 +534,22 @@
     "selectedSlot": "Selected Slots:",
     "proceedPayment": "Proceed to Payment"
   },
+
+  "createEvent": {
+    "backButton": "← Back",
+    "title": "Create Event",
+    "name": "Event Name",
+    "desc": "Description",
+    "venue": "Select Venue",
+    "date": "Date",
+    "capacity": "Capacity",
+    "price": "Price (optional)",
+    "image": "Image URL (optional)",
+    "submitButton": "Create Event",
+    "success": "Event created successfully.",
+    "error": "Failed to create event."
+  },
+
 
   "titles": {
     "mgmtDashboard": "Management Dashboard",

@@ -10,7 +10,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import TicketBooking from './pages/TicketBooking';
-import VenueBooking from './pages/VenueBooking';
+import CreateEvent from './pages/CreateEvent';
 import LiveBooking from './pages/LiveBooking';
 import VenueLiveBooking from './pages/VenueLiveBooking';
 import Payment from './pages/Payment';
@@ -48,7 +48,7 @@ const AppLayout = () => {
           <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
           <Route path="/register" element={token ? <Navigate to="/" /> : <Register />} />
           <Route path="/ticket-booking" element={token ? <TicketBooking /> : <Navigate to="/login" />} />
-          <Route path="/venue-booking" element={token ? <VenueBooking /> : <Navigate to="/login" />} />
+          <Route path="/create-event" element={token ? <CreateEvent /> : <Navigate to="/login" />} />
           <Route path="/live-booking" element={token ? <LiveBooking /> : <Navigate to="/login" />} />
           <Route path="/VenueLiveBooking" element={token ? <VenueLiveBooking /> : <Navigate to="/login" />} />
           <Route path="/payment" element={token ? <Payment /> : <Navigate to="/login" />} />
