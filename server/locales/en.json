@@ -106,7 +106,10 @@
         "approveError": "Error approving proposal.",
         "rejected": "Proposal rejected.",
         "rejectError": "Error rejecting proposal.",
-        "invalidVenue": "Selected venue does not exist."
+        "invalidVenue": "Selected venue does not exist.",
+        "deleted": "Proposal and associated event deleted successfully.",
+        "deleteError": "Error deleting proposal.",
+        "deleteButton": "Delete"
     }
 
 }

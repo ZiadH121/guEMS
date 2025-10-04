@@ -604,6 +604,9 @@
   "readMore": "Read more",
   "fullDescription": "Full Description",
   "close": "Close",
+  "deleteButton": "Delete",
+  "deleted": "Proposal deleted successfully.",
+  "deleteError": "Failed to delete proposal.",
   "status": {
     "pending": "Pending",
     "approved": "Approved",
