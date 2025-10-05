@@ -3,7 +3,7 @@
     "title": "Welcome to Galala Event Management System",
     "subtitle": "Empowering innovation, collaboration, and sustainable progress through smart facilities and events.",
     "bookEvent": "Book Event",
-    "reserveVenue": "Reserve Venue",
+    "createEvent": "Create Event",
     "myBookings": "My Bookings",
     "viewMetrics": "View Metrics",
     "adminPanel": "Admin Panel",

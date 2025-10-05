@@ -25,7 +25,7 @@ const Home = () => {
             <Link to="/ticket-booking" style={heroButton}>{t('home.bookEvent')}</Link>
 
             {!isVisitor && (
-              <Link to="/venue-booking" style={heroButton}>{t('home.reserveVenue')}</Link>
+              <Link to="/venue-booking" style={heroButton}>{t('home.createEvent')}</Link>
             )}
 
             {/* <Link to="/my-bookings" style={heroButton}>{t('home.myBookings')}</Link> */}
