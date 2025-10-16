@@ -116,78 +116,72 @@ const ProposalsTab = () => {
               <tr key={p._id}>
                 <td>{p.title}</td>
 
-                <td
-                  style={{
-                    maxWidth: '180px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    verticalAlign: 'middle'
-                  }}
-                >
-                  {p.description ? (
-                    <>
-                      <span
-                        className="text-ellipsis"
-                        data-key={`desc-${p._id}`}
-                        title={p.description}
-                      >
-                        {p.description}
-                      </span>
-                      {overflowMap[`desc-${p._id}`] && (
-                        <Button
-                          variant="link"
-                          size="sm"
-                          onClick={() => {
-                            setModalTitle(t('proposal.fullDescription'));
-                            setSelectedDescription(p.description);
-                            setSelectedSldNeeds('');
-                            setShowModal(true);
-                          }}
-                          className="ms-1"
-                        >
-                          {t('proposal.readMore')}
-                        </Button>
-                      )}
-                    </>
-                  ) : '—'}
+                <td style={{ maxWidth: '180px', verticalAlign: 'middle' }}>
+                  <div
+                    className="text-ellipsis"
+                    data-key={`desc-${p._id}`}
+                    style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: 'inline-block',
+                      maxWidth: '140px',
+                      verticalAlign: 'middle'
+                    }}
+                    title={p.description}
+                  >
+                    {p.description || '—'}
+                  </div>
+                  {overflowMap[`desc-${p._id}`] && (
+                    <Button
+                      variant="link"
+                      size="sm"
+                      style={{ display: 'inline-block', whiteSpace: 'nowrap' }}
+                      onClick={() => {
+                        setModalTitle(t('proposal.fullDescription'));
+                        setSelectedDescription(p.description);
+                        setSelectedSldNeeds('');
+                        setShowModal(true);
+                      }}
+                      className="ms-1"
+                    >
+                      {t('proposal.readMore')}
+                    </Button>
+                  )}
                 </td>
 
-                <td
-                  style={{
-                    maxWidth: '180px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    verticalAlign: 'middle'
-                  }}
-                >
-                  {p.sldNeeds ? (
-                    <>
-                      <span
-                        className="text-ellipsis"
-                        data-key={`needs-${p._id}`}
-                        title={p.sldNeeds}
-                      >
-                        {p.sldNeeds}
-                      </span>
-                      {overflowMap[`needs-${p._id}`] && (
-                        <Button
-                          variant="link"
-                          size="sm"
-                          onClick={() => {
-                            setModalTitle(t('proposal.sldNeedsTitle'));
-                            setSelectedDescription('');
-                            setSelectedSldNeeds(p.sldNeeds);
-                            setShowModal(true);
-                          }}
-                          className="ms-1"
-                        >
-                          {t('proposal.readMore')}
-                        </Button>
-                      )}
-                    </>
-                  ) : '—'}
+                <td style={{ maxWidth: '180px', verticalAlign: 'middle' }}>
+                  <div
+                    className="text-ellipsis"
+                    data-key={`needs-${p._id}`}
+                    style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: 'inline-block',
+                      maxWidth: '140px',
+                      verticalAlign: 'middle'
+                    }}
+                    title={p.sldNeeds}
+                  >
+                    {p.sldNeeds || '—'}
+                  </div>
+                  {overflowMap[`needs-${p._id}`] && (
+                    <Button
+                      variant="link"
+                      size="sm"
+                      style={{ display: 'inline-block', whiteSpace: 'nowrap' }}
+                      onClick={() => {
+                        setModalTitle(t('proposal.sldNeedsTitle'));
+                        setSelectedDescription('');
+                        setSelectedSldNeeds(p.sldNeeds);
+                        setShowModal(true);
+                      }}
+                      className="ms-1"
+                    >
+                      {t('proposal.readMore')}
+                    </Button>
+                  )}
                 </td>
 
                 <td>{p.proposer?.name}</td>
