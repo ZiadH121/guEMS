@@ -9,7 +9,7 @@ const Venue = require('../models/Venue');
 
 router.post('/', verifyToken, async (req, res) => {
   try {
-    const { title, description, capacity, venue, date } = req.body;
+    const { title, description, capacity, venue, date, sldNeeds } = req.body;
     const venueDoc = await Venue.findById(venue);
     if (!venueDoc) {
       return res.status(400).json({ error: res.__('proposal.invalidVenue') });
