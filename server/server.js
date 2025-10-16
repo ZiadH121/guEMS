@@ -18,20 +18,19 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = ['http://localhost:5173', 'https://gu-ems.vercel.app', 'https://guems.onrender.com'];
 
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS not allowed for this origin'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-app.options('*', cors());
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,PATCH,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 app.use(express.json());
 app.use(i18n.init);
@@ -69,6 +68,7 @@ const proposalRoutes = require('./routes/proposals');
 app.use('/api/proposals', proposalRoutes);
 
 app.get('/', (req, res) => {
+  console.log('[CORS DEBUG]', req.headers.origin);
   res.send('Backend is running!');
 });
 
