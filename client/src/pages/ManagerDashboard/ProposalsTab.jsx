@@ -97,10 +97,18 @@ const ProposalsTab = () => {
               <tr key={p._id}>
                 <td>{p.title}</td>
 
-                <td>
-                  {p.description && p.description.length > 50 ? (
+                <td
+                  style={{
+                    maxWidth: '180px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    verticalAlign: 'middle'
+                  }}
+                >
+                  {p.description ? (
                     <>
-                      {p.description.slice(0, 50)}...
+                      <span title={p.description}>{p.description}</span>
                       <Button
                         variant="link"
                         size="sm"
@@ -110,17 +118,26 @@ const ProposalsTab = () => {
                           setSelectedSldNeeds('');
                           setShowModal(true);
                         }}
+                        className="ms-1"
                       >
                         {t('proposal.readMore')}
                       </Button>
                     </>
-                  ) : p.description || '—'}
+                  ) : '—'}
                 </td>
 
-                <td>
-                  {p.sldNeeds && p.sldNeeds.length > 50 ? (
+                <td
+                  style={{
+                    maxWidth: '180px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    verticalAlign: 'middle'
+                  }}
+                >
+                  {p.sldNeeds ? (
                     <>
-                      {p.sldNeeds.slice(0, 50)}...
+                      <span title={p.sldNeeds}>{p.sldNeeds}</span>
                       <Button
                         variant="link"
                         size="sm"
@@ -130,11 +147,12 @@ const ProposalsTab = () => {
                           setSelectedSldNeeds(p.sldNeeds);
                           setShowModal(true);
                         }}
+                        className="ms-1"
                       >
                         {t('proposal.readMore')}
                       </Button>
                     </>
-                  ) : p.sldNeeds || '—'}
+                  ) : '—'}
                 </td>
 
                 <td>{p.proposer?.name}</td>
