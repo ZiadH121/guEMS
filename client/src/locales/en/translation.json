@@ -605,6 +605,11 @@
   "deleteButton": "Delete",
   "deleted": "Proposal deleted successfully.",
   "deleteError": "Failed to delete proposal.",
+  "sldNeedsLabel": "What do you need from SLD for your event?",
+  "sldNeedsPlaceholder": "List any support or resources you need (e.g., chairs, banners, volunteers)...",
+  "fullDetails": "Proposal Details",
+  "sldNeedsTitle": "SLD Requirements",
+  "deleteConfirm": "Are you sure you want to delete this proposal and its related event?",
   "status": {
     "pending": "Pending",
     "approved": "Approved",

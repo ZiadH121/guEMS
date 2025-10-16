@@ -20,6 +20,7 @@ router.post('/', verifyToken, async (req, res) => {
       capacity,
       venue,
       date,
+      sldNeeds,
       proposer: req.user.id
     });
     await newProposal.save();

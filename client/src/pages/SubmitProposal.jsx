@@ -2,11 +2,18 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { apiFetch } from '../utils/api';
+import { apiFetch } from './utils/api';
 
 const SubmitProposal = () => {
   const { t } = useTranslation();
-  const [form, setForm] = useState({ title: '', description: '', capacity: '', venue: '', date: '' });
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+    capacity: '',
+    venue: '',
+    date: '',
+    sldNeeds: ''
+  });
   const [venues, setVenues] = useState([]);
   const [message, setMessage] = useState('');
 
@@ -27,13 +34,25 @@ const SubmitProposal = () => {
     try {
       const res = await apiFetch('/proposals', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
         body: JSON.stringify(form)
       });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
+
       setMessage(t('proposal.submitted'));
-      setForm({ title: '', description: '', capacity: '', venue: '', date: '' });
+      setForm({
+        title: '',
+        description: '',
+        capacity: '',
+        venue: '',
+        date: '',
+        sldNeeds: ''
+      });
     } catch (err) {
       setMessage(err.message);
     }
@@ -57,38 +76,97 @@ const SubmitProposal = () => {
   return (
     <Container className="py-5">
       <h2 className="mb-4">{t('proposal.submitTitle')}</h2>
+
       {message && (
-        <Alert variant={message.includes('Error') ? 'danger' : message.includes('submitted') ? 'success' : 'warning'}>
+        <Alert
+          variant={
+            message.includes('Error')
+              ? 'danger'
+              : message.includes('submitted')
+              ? 'success'
+              : 'warning'
+          }
+        >
           {message}
         </Alert>
       )}
+
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>{t('proposal.title')}</Form.Label>
-          <Form.Control name="title" value={form.title} onChange={handleChange} required />
+          <Form.Control
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            required
+          />
         </Form.Group>
+
         <Form.Group className="mb-3">
           <Form.Label>{t('proposal.description')}</Form.Label>
-          <Form.Control as="textarea" name="description" value={form.description} onChange={handleChange} required />
+          <Form.Control
+            as="textarea"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            required
+          />
         </Form.Group>
+
         <Form.Group className="mb-3">
           <Form.Label>{t('proposal.capacity')}</Form.Label>
-          <Form.Control type="number" name="capacity" value={form.capacity} onChange={handleChange} required />
+          <Form.Control
+            type="number"
+            name="capacity"
+            value={form.capacity}
+            onChange={handleChange}
+            required
+          />
         </Form.Group>
+
         <Form.Group className="mb-3">
           <Form.Label>{t('proposal.venue')}</Form.Label>
-          <Form.Select name="venue" value={form.venue} onChange={handleChange} required>
+          <Form.Select
+            name="venue"
+            value={form.venue}
+            onChange={handleChange}
+            required
+          >
             <option value="">{t('proposal.selectVenue')}</option>
             {venues.map(v => (
-              <option key={v._id} value={v._id}>{v.name}</option>
+              <option key={v._id} value={v._id}>
+                {v.name}
+              </option>
             ))}
           </Form.Select>
         </Form.Group>
+
         <Form.Group className="mb-3">
           <Form.Label>{t('proposal.date')}</Form.Label>
-          <Form.Control type="date" name="date" value={form.date} onChange={handleChange} required />
+          <Form.Control
+            type="date"
+            name="date"
+            value={form.date}
+            onChange={handleChange}
+            required
+          />
         </Form.Group>
-        <Button type="submit" className="btn bg-brown">{t('proposal.submitButton')}</Button>
+
+        <Form.Group className="mb-3">
+          <Form.Label>{t('proposal.sldNeedsLabel')}</Form.Label>
+          <Form.Control
+            as="textarea"
+            name="sldNeeds"
+            value={form.sldNeeds}
+            onChange={handleChange}
+            placeholder={t('proposal.sldNeedsPlaceholder')}
+            rows={3}
+          />
+        </Form.Group>
+
+        <Button type="submit" className="btn bg-brown">
+          {t('proposal.submitButton')}
+        </Button>
       </Form>
     </Container>
   );

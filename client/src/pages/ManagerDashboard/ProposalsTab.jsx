@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Alert, Spinner, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { apiFetch } from '../../utils/api';
+import { apiFetch } from '././utils/api';
 
 const ProposalsTab = () => {
   const { t } = useTranslation();
@@ -11,6 +11,7 @@ const ProposalsTab = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedDescription, setSelectedDescription] = useState('');
+  const [selectedSldNeeds, setSelectedSldNeeds] = useState('');
 
   const fetchProposals = async () => {
     try {
@@ -46,9 +47,8 @@ const ProposalsTab = () => {
     }
   };
 
-  // ✅ NEW: Delete handler
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this proposal and its related event?')) return;
+    if (!window.confirm(t('proposal.deleteConfirm'))) return;
     try {
       const res = await apiFetch(`/proposals/${id}`, {
         method: 'DELETE',
@@ -93,12 +93,13 @@ const ProposalsTab = () => {
                 <td>
                   {p.description && p.description.length > 50 ? (
                     <>
-                      {p.description.slice(0, 50)}...
+                      {p.description.slice(0, 50)}.
                       <Button
                         variant="link"
                         size="sm"
                         onClick={() => {
                           setSelectedDescription(p.description);
+                          setSelectedSldNeeds(p.sldNeeds || '');
                           setShowModal(true);
                         }}
                       >
@@ -149,17 +150,25 @@ const ProposalsTab = () => {
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>{t('proposal.fullDescription')}</Modal.Title>
+          <Modal.Title>{t('proposal.fullDetails')}</Modal.Title>
         </Modal.Header>
         <Modal.Body
           style={{
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
-            maxHeight: '300px',
+            maxHeight: '400px',
             overflowY: 'auto'
           }}
         >
+          <h6 className="text-primary">{t('proposal.fullDescription')}</h6>
           <p>{selectedDescription}</p>
+
+          {selectedSldNeeds && (
+            <>
+              <h6 className="text-primary mt-3">{t('proposal.sldNeedsTitle')}</h6>
+              <p className="text-muted">{selectedSldNeeds}</p>
+            </>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
