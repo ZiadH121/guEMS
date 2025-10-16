@@ -610,6 +610,7 @@
   "fullDetails": "Proposal Details",
   "sldNeedsTitle": "SLD Requirements",
   "deleteConfirm": "Are you sure you want to delete this proposal and its related event?",
+  "colSldNeeds": "SLD Needs",
   "status": {
     "pending": "Pending",
     "approved": "Approved",

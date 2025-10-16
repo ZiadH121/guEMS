@@ -12,6 +12,7 @@ const ProposalsTab = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedDescription, setSelectedDescription] = useState('');
   const [selectedSldNeeds, setSelectedSldNeeds] = useState('');
+  const [modalTitle, setModalTitle] = useState('');
 
   const fetchProposals = async () => {
     try {
@@ -70,11 +71,12 @@ const ProposalsTab = () => {
     <div>
       <h4 className="text-center mb-3">{t('proposal.reviewTitle')}</h4>
       {error && <Alert variant="danger" className="text-center">{error}</Alert>}
-      <Table striped bordered hover>
+      <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>{t('proposal.colTitle')}</th>
             <th>{t('proposal.colDescription')}</th>
+            <th>{t('proposal.colSldNeeds')}</th>
             <th>{t('proposal.colProposer')}</th>
             <th>{t('proposal.colVenue')}</th>
             <th>{t('proposal.colDate')}</th>
@@ -85,21 +87,27 @@ const ProposalsTab = () => {
         </thead>
         <tbody>
           {proposals.length === 0 ? (
-            <tr><td colSpan="8" className="text-center">{t('proposal.noProposals')}</td></tr>
+            <tr>
+              <td colSpan="9" className="text-center">
+                {t('proposal.noProposals')}
+              </td>
+            </tr>
           ) : (
             proposals.map(p => (
               <tr key={p._id}>
                 <td>{p.title}</td>
+
                 <td>
                   {p.description && p.description.length > 50 ? (
                     <>
-                      {p.description.slice(0, 50)}.
+                      {p.description.slice(0, 50)}...
                       <Button
                         variant="link"
                         size="sm"
                         onClick={() => {
+                          setModalTitle(t('proposal.fullDescription'));
                           setSelectedDescription(p.description);
-                          setSelectedSldNeeds(p.sldNeeds || '');
+                          setSelectedSldNeeds('');
                           setShowModal(true);
                         }}
                       >
@@ -108,6 +116,27 @@ const ProposalsTab = () => {
                     </>
                   ) : p.description || '—'}
                 </td>
+
+                <td>
+                  {p.sldNeeds && p.sldNeeds.length > 50 ? (
+                    <>
+                      {p.sldNeeds.slice(0, 50)}...
+                      <Button
+                        variant="link"
+                        size="sm"
+                        onClick={() => {
+                          setModalTitle(t('proposal.sldNeedsTitle'));
+                          setSelectedDescription('');
+                          setSelectedSldNeeds(p.sldNeeds);
+                          setShowModal(true);
+                        }}
+                      >
+                        {t('proposal.readMore')}
+                      </Button>
+                    </>
+                  ) : p.sldNeeds || '—'}
+                </td>
+
                 <td>{p.proposer?.name}</td>
                 <td>{p.venue?.name || '—'}</td>
                 <td>{new Date(p.date).toLocaleDateString()}</td>
@@ -150,7 +179,7 @@ const ProposalsTab = () => {
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>{t('proposal.fullDetails')}</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body
           style={{
@@ -160,15 +189,8 @@ const ProposalsTab = () => {
             overflowY: 'auto'
           }}
         >
-          <h6 className="text-primary">{t('proposal.fullDescription')}</h6>
-          <p>{selectedDescription}</p>
-
-          {selectedSldNeeds && (
-            <>
-              <h6 className="text-primary mt-3">{t('proposal.sldNeedsTitle')}</h6>
-              <p className="text-muted">{selectedSldNeeds}</p>
-            </>
-          )}
+          {selectedDescription && <p>{selectedDescription}</p>}
+          {selectedSldNeeds && <p className="text-muted">{selectedSldNeeds}</p>}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>

@@ -68,7 +68,6 @@ const proposalRoutes = require('./routes/proposals');
 app.use('/api/proposals', proposalRoutes);
 
 app.get('/', (req, res) => {
-  console.log('[CORS DEBUG]', req.headers.origin);
   res.send('Backend is running!');
 });
 
