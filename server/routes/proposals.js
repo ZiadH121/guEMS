@@ -39,6 +39,7 @@ router.get('/', verifyToken, requireRole('staff'), async (req, res) => {
   }
 });
 
+
 router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res) => {
   try {
     const proposal = await Proposal.findById(req.params.id).populate('venue', 'name');
