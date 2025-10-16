@@ -1,5 +1,5 @@
 // ProposalsTab.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Table, Button, Alert, Spinner, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { apiFetch } from '../../utils/api';
@@ -13,6 +13,7 @@ const ProposalsTab = () => {
   const [selectedDescription, setSelectedDescription] = useState('');
   const [selectedSldNeeds, setSelectedSldNeeds] = useState('');
   const [modalTitle, setModalTitle] = useState('');
+  const [overflowMap, setOverflowMap] = useState({});
 
   const fetchProposals = async () => {
     try {
@@ -65,6 +66,24 @@ const ProposalsTab = () => {
     }
   };
 
+  const detectOverflow = () => {
+    const newMap = {};
+    document.querySelectorAll('.text-ellipsis').forEach(el => {
+      if (el.scrollWidth > el.clientWidth) {
+        newMap[el.dataset.key] = true;
+      }
+    });
+    setOverflowMap(newMap);
+  };
+
+  useEffect(() => {
+    if (!loading && proposals.length > 0) {
+      setTimeout(detectOverflow, 100);
+      window.addEventListener('resize', detectOverflow);
+      return () => window.removeEventListener('resize', detectOverflow);
+    }
+  }, [loading, proposals]);
+
   if (loading) return <Spinner animation="border" className="d-block mx-auto mt-5" />;
 
   return (
@@ -108,20 +127,28 @@ const ProposalsTab = () => {
                 >
                   {p.description ? (
                     <>
-                      <span title={p.description}>{p.description}</span>
-                      <Button
-                        variant="link"
-                        size="sm"
-                        onClick={() => {
-                          setModalTitle(t('proposal.fullDescription'));
-                          setSelectedDescription(p.description);
-                          setSelectedSldNeeds('');
-                          setShowModal(true);
-                        }}
-                        className="ms-1"
+                      <span
+                        className="text-ellipsis"
+                        data-key={`desc-${p._id}`}
+                        title={p.description}
                       >
-                        {t('proposal.readMore')}
-                      </Button>
+                        {p.description}
+                      </span>
+                      {overflowMap[`desc-${p._id}`] && (
+                        <Button
+                          variant="link"
+                          size="sm"
+                          onClick={() => {
+                            setModalTitle(t('proposal.fullDescription'));
+                            setSelectedDescription(p.description);
+                            setSelectedSldNeeds('');
+                            setShowModal(true);
+                          }}
+                          className="ms-1"
+                        >
+                          {t('proposal.readMore')}
+                        </Button>
+                      )}
                     </>
                   ) : '—'}
                 </td>
@@ -137,20 +164,28 @@ const ProposalsTab = () => {
                 >
                   {p.sldNeeds ? (
                     <>
-                      <span title={p.sldNeeds}>{p.sldNeeds}</span>
-                      <Button
-                        variant="link"
-                        size="sm"
-                        onClick={() => {
-                          setModalTitle(t('proposal.sldNeedsTitle'));
-                          setSelectedDescription('');
-                          setSelectedSldNeeds(p.sldNeeds);
-                          setShowModal(true);
-                        }}
-                        className="ms-1"
+                      <span
+                        className="text-ellipsis"
+                        data-key={`needs-${p._id}`}
+                        title={p.sldNeeds}
                       >
-                        {t('proposal.readMore')}
-                      </Button>
+                        {p.sldNeeds}
+                      </span>
+                      {overflowMap[`needs-${p._id}`] && (
+                        <Button
+                          variant="link"
+                          size="sm"
+                          onClick={() => {
+                            setModalTitle(t('proposal.sldNeedsTitle'));
+                            setSelectedDescription('');
+                            setSelectedSldNeeds(p.sldNeeds);
+                            setShowModal(true);
+                          }}
+                          className="ms-1"
+                        >
+                          {t('proposal.readMore')}
+                        </Button>
+                      )}
                     </>
                   ) : '—'}
                 </td>
@@ -195,6 +230,7 @@ const ProposalsTab = () => {
         </tbody>
       </Table>
 
+      {/* Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{modalTitle}</Modal.Title>
