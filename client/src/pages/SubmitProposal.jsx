@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { apiFetch } from './utils/api';
+import { apiFetch } from '../utils/api';
 
 const SubmitProposal = () => {
   const { t } = useTranslation();
