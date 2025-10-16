@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Alert, Spinner, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { apiFetch } from '../utils/api';
+import { apiFetch } from '../../utils/api';
 
 const ProposalsTab = () => {
   const { t } = useTranslation();
