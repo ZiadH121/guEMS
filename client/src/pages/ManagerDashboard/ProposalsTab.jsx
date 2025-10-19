@@ -86,6 +86,15 @@ const ProposalsTab = () => {
 
   if (loading) return <Spinner animation="border" className="d-block mx-auto mt-5" />;
 
+  const formatTime = (timeStr) => {
+  if (!timeStr) return '';
+  const [hour, minute] = timeStr.split(':');
+  let h = parseInt(hour);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}:${minute} ${ampm}`;
+};
+
   return (
     <div>
       <h4 className="text-center mb-3">{t('proposal.reviewTitle')}</h4>
@@ -192,7 +201,7 @@ const ProposalsTab = () => {
                   {p.slotType === 'preset'
                     ? p.slot || '—'
                     : p.startTime && p.endTime
-                    ? `Custom: ${p.startTime} - ${p.endTime}`
+                    ? `Custom: ${formatTime(p.startTime)} - ${formatTime(p.endTime)}`
                     : '—'}
                 </td>
                 <td>{p.capacity}</td>

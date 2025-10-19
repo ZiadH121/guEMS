@@ -621,7 +621,7 @@
   "missingSlot": "Please select a time slot.",
   "missingCustomTime": "Please select both start and end times.",
   "invalidTimeOrder": "Start time must be before end time.",
-  "outOfHours": "Time must be between 10:00 and 22:00.",
+  "outOfHours": "Time must be between 10:00 AM and 10:00 PM.",
   "colSlot": "Time Slot",
   "status": {
     "pending": "Pending",
