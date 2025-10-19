@@ -1,6 +1,6 @@
 // SubmitProposal.jsx
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, Alert } from 'react-bootstrap';
+import { Form, Button, Container, Alert, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { apiFetch } from '../utils/api';
 
@@ -12,10 +12,22 @@ const SubmitProposal = () => {
     capacity: '',
     venue: '',
     date: '',
+    slotType: 'preset',
+    slot: '',
+    startTime: '',
+    endTime: '',
     sldNeeds: ''
   });
   const [venues, setVenues] = useState([]);
   const [message, setMessage] = useState('');
+  const presetSlots = [
+    '10:00 AM - 12:00 PM',
+    '12:00 PM - 2:00 PM',
+    '2:00 PM - 4:00 PM',
+    '4:00 PM - 6:00 PM',
+    '6:00 PM - 8:00 PM',
+    '8:00 PM - 10:00 PM'
+  ];
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -28,6 +40,24 @@ const SubmitProposal = () => {
     }
     if (new Date(form.date) < new Date()) {
       setMessage(t('proposal.invalidDate'));
+      return;
+    }
+
+    if (form.slotType === 'custom') {
+      if (!form.startTime || !form.endTime) {
+        setMessage(t('proposal.missingCustomTime'));
+        return;
+      }
+      if (form.startTime >= form.endTime) {
+        setMessage(t('proposal.invalidTimeOrder'));
+        return;
+      }
+      if (form.startTime < '10:00' || form.endTime > '22:00') {
+        setMessage(t('proposal.outOfHours'));
+        return;
+      }
+    } else if (form.slotType === 'preset' && !form.slot) {
+      setMessage(t('proposal.missingSlot'));
       return;
     }
 
@@ -51,6 +81,10 @@ const SubmitProposal = () => {
         capacity: '',
         venue: '',
         date: '',
+        slotType: 'preset',
+        slot: '',
+        startTime: '',
+        endTime: '',
         sldNeeds: ''
       });
     } catch (err) {
@@ -151,6 +185,57 @@ const SubmitProposal = () => {
             required
           />
         </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>{t('proposal.slotTypeLabel')}</Form.Label>
+          <Form.Select
+            name="slotType"
+            value={form.slotType}
+            onChange={handleChange}
+          >
+            <option value="preset">{t('proposal.presetSlot')}</option>
+            <option value="custom">{t('proposal.customSlot')}</option>
+          </Form.Select>
+        </Form.Group>
+
+        {form.slotType === 'preset' && (
+          <Form.Group className="mb-3">
+            <Form.Label>{t('proposal.slotLabel')}</Form.Label>
+            <Form.Select
+              name="slot"
+              value={form.slot}
+              onChange={handleChange}
+            >
+              <option value="">{t('proposal.selectSlot')}</option>
+              {presetSlots.map((s, i) => (
+                <option key={i} value={s}>{s}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        )}
+
+        {form.slotType === 'custom' && (
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>{t('proposal.startTime')}</Form.Label>
+              <Form.Control
+                type="time"
+                name="startTime"
+                value={form.startTime}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col>
+              <Form.Label>{t('proposal.endTime')}</Form.Label>
+              <Form.Control
+                type="time"
+                name="endTime"
+                value={form.endTime}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+        )}
 
         <Form.Group className="mb-3">
           <Form.Label>{t('proposal.sldNeedsLabel')}</Form.Label>

@@ -5,15 +5,46 @@ const Booking = require('../models/Booking');
 const verifyToken = require('../middleware/auth');
 const requireRole = require('../middleware/requireRole');
 const router = express.Router();
-const Venue = require('../models/Venue'); 
+const Venue = require('../models/Venue');
 
 router.post('/', verifyToken, async (req, res) => {
   try {
-    const { title, description, capacity, venue, date, sldNeeds } = req.body;
+    const {
+      title,
+      description,
+      capacity,
+      venue,
+      date,
+      sldNeeds,
+      slotType,
+      slot,
+      startTime,
+      endTime
+    } = req.body;
+
     const venueDoc = await Venue.findById(venue);
     if (!venueDoc) {
       return res.status(400).json({ error: res.__('proposal.invalidVenue') });
     }
+
+    if (slotType === 'preset') {
+      if (!slot) {
+        return res.status(400).json({ error: res.__('proposal.missingSlot') });
+      }
+    } else if (slotType === 'custom') {
+      if (!startTime || !endTime) {
+        return res.status(400).json({ error: res.__('proposal.missingCustomTime') });
+      }
+
+      if (startTime >= endTime) {
+        return res.status(400).json({ error: res.__('proposal.invalidTimeOrder') });
+      }
+
+      if (startTime < '10:00' || endTime > '22:00') {
+        return res.status(400).json({ error: res.__('proposal.outOfHours') });
+      }
+    }
+
     const newProposal = new Proposal({
       title,
       description,
@@ -21,11 +52,17 @@ router.post('/', verifyToken, async (req, res) => {
       venue,
       date,
       sldNeeds,
+      slotType,
+      slot,
+      startTime,
+      endTime,
       proposer: req.user.id
     });
+
     await newProposal.save();
     res.json({ message: res.__('proposal.submitted'), proposal: newProposal });
   } catch (err) {
+    console.error('Proposal submission error:', err);
     res.status(500).json({ error: res.__('proposal.submitError') });
   }
 });

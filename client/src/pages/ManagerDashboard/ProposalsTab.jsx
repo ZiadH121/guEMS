@@ -99,6 +99,7 @@ const ProposalsTab = () => {
             <th>{t('proposal.colProposer')}</th>
             <th>{t('proposal.colVenue')}</th>
             <th>{t('proposal.colDate')}</th>
+            <th>{t('proposal.colSlot')}</th>
             <th>{t('proposal.colCapacity')}</th>
             <th>{t('proposal.colStatus')}</th>
             <th>{t('proposal.colActions')}</th>
@@ -187,6 +188,13 @@ const ProposalsTab = () => {
                 <td>{p.proposer?.name}</td>
                 <td>{p.venue?.name || '—'}</td>
                 <td>{new Date(p.date).toLocaleDateString()}</td>
+                <td>
+                  {p.slotType === 'preset'
+                    ? p.slot || '—'
+                    : p.startTime && p.endTime
+                    ? `Custom: ${p.startTime} - ${p.endTime}`
+                    : '—'}
+                </td>
                 <td>{p.capacity}</td>
                 <td>{t(`proposal.status.${p.status}`)}</td>
                 <td>
