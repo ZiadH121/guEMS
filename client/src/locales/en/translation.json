@@ -175,23 +175,18 @@
   },
 
   "bkngMgmt": {
-    "title": "Booking Management",
-    "tabEvents": "Event Bookings",
-    "tabVenues": "Venue Reservations",
-    "search": "Search by name or event",
+    "title": "Event Bookings Management",
+    "search": "Search by event or attendee",
     "filterAll": "All Statuses",
     "filterConfirmed": "Confirmed",
     "filterPending": "Pending",
     "filterCancelled": "Cancelled",
-    "user": "User",
-    "email": "Email",
-    "seat": "Seat",
+    "event": "Event",
+    "venue": "Venue",
     "date": "Date",
-    "time": "Time",
-    "venueTitle": "Venue",
-    "status": "Status",
+    "booked": "Booked",
     "actions": "Actions",
-    "cancel": "Cancel",
+    "view": "View Attendees",
     "exportCSV": "Export Attendees CSV",
     "noBookings": "No bookings found.",
     "cancelConfirm": "Are you sure you want to cancel this booking?",
@@ -200,7 +195,12 @@
       "confirmed": "Confirmed",
       "pending": "Pending",
       "cancelled": "Cancelled"
-      }
+    },
+    "seat": "Seat",
+    "user": "User",
+    "email": "Email",
+    "status": "Status",
+    "cancel": "Cancel"
   },
 
   "fdbckMgmt": {

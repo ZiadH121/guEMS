@@ -1,32 +1,39 @@
-// BookingManagementTab.jsx – View all event bookings and manage them
+// BookingManagementTab.jsx – GEMS Event Booking Management
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Alert, Spinner, Tabs, Tab, Form, Accordion } from 'react-bootstrap';
+import { Table, Button, Alert, Spinner, Form, Modal, Pagination } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { apiFetch } from '../../utils/api';
 import { saveAs } from 'file-saver';
 
+const ITEMS_PER_PAGE = 10;
+
 const BookingManagementTab = () => {
   const { t } = useTranslation();
   const [bookings, setBookings] = useState([]);
-  const [filterType, setFilterType] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    document.title = `GEMS - ${t('titles.mgmtDashboard')}`;
-  }, [t]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [attendees, setAttendees] = useState([]);
+  const [modalLoading, setModalLoading] = useState(false);
+
+    useEffect(() => {
+      document.title = `GEMS - ${t('titles.mgmtDashboard')}`;
+    }, [t]);
 
   const fetchBookings = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await apiFetch(`/admin/bookings`, {
+      const res = await apiFetch(`/admin/bookings?type=event`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) throw new Error(data.error || 'Failed to fetch bookings');
       setBookings(data);
     } catch (err) {
       setError(err.message);
@@ -39,16 +46,61 @@ const BookingManagementTab = () => {
     fetchBookings();
   }, []);
 
-  const handleExportCSV = async (eventId, eventName) => {
+  const filtered = bookings.filter((b) => {
+    const matchesSearch =
+      !search ||
+      b.details?.event?.toLowerCase().includes(search.toLowerCase()) ||
+      b.user?.name?.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus =
+      statusFilter === 'all' || b.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const grouped = filtered.reduce((acc, b) => {
+    const eventName = b.details?.event || 'Unnamed Event';
+    if (!acc[eventName]) acc[eventName] = [];
+    acc[eventName].push(b);
+    return acc;
+  }, {});
+
+  const events = Object.keys(grouped).map((name) => ({
+    name,
+    venue: grouped[name][0].details?.venue || '—',
+    date: grouped[name][0].details?.date || '—',
+    capacity: grouped[name][0].details?.capacity || 0,
+    booked: grouped[name].filter((b) => b.status === 'confirmed').length,
+    list: grouped[name]
+  }));
+
+  const totalPages = Math.ceil(events.length / ITEMS_PER_PAGE);
+  const paginated = events.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  const handleExportCSV = async (eventName) => {
     try {
-      const res = await apiFetch(`/bookings/export/${eventId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      const token = localStorage.getItem('token');
+      const res = await apiFetch(`/bookings/export/${encodeURIComponent(eventName)}`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
+      if (!res.ok) throw new Error();
       const blob = await res.blob();
       saveAs(blob, `${eventName}_attendees.csv`);
     } catch {
       alert(t('bkngMgmt.exportError'));
     }
+  };
+
+  const openModal = (event) => {
+    setSelectedEvent(event);
+    setModalLoading(true);
+    setShowModal(true);
+    setAttendees(event.list);
+    setModalLoading(false);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedEvent(null);
+    setAttendees([]);
   };
 
   const handleCancel = async (id) => {
@@ -68,31 +120,9 @@ const BookingManagementTab = () => {
     }
   };
 
-  const filteredBookings = bookings.filter((b) => {
-    if (filterType !== 'all' && b.type !== filterType) return false;
-    if (statusFilter !== 'all' && b.status !== statusFilter) return false;
-    if (search && !(
-      b.details?.event?.toLowerCase().includes(search.toLowerCase()) ||
-      b.user?.name?.toLowerCase().includes(search.toLowerCase())
-    )) return false;
-    return true;
-  });
-
-  const groupedEvents = filteredBookings
-    .filter((b) => b.type === 'event')
-    .reduce((acc, b) => {
-      const eventName = b.details?.event || 'Unnamed Event';
-      if (!acc[eventName]) acc[eventName] = [];
-      acc[eventName].push(b);
-      return acc;
-    }, {});
-
-  const venueBookings = filteredBookings.filter((b) => b.type === 'venue');
-
   return (
     <div className="fade-in">
       <h4 className="text-center mb-4">{t('bkngMgmt.title')}</h4>
-
       {error && <Alert variant="danger" className="text-center">{error}</Alert>}
 
       <Form className="d-flex flex-wrap justify-content-center mb-4 gap-2">
@@ -115,99 +145,135 @@ const BookingManagementTab = () => {
         </Form.Select>
       </Form>
 
-      <Tabs defaultActiveKey="events" className="mb-3 justify-content-center">
-        <Tab eventKey="events" title={t('bkngMgmt.tabEvents')}>
-          {loading ? (
-            <Spinner animation="border" className="d-block mx-auto mt-4" />
-          ) : Object.keys(groupedEvents).length === 0 ? (
-            <p className="text-center text-muted">{t('bkngMgmt.noBookings')}</p>
-          ) : (
-            <Accordion>
-              {Object.entries(groupedEvents).map(([eventName, list]) => (
-                <Accordion.Item eventKey={eventName} key={eventName}>
-                  <Accordion.Header>{eventName}</Accordion.Header>
-                  <Accordion.Body>
-                    <div className="d-flex justify-content-end mb-2">
-                      <Button
-                        variant="outline-success"
-                        size="sm"
-                        onClick={() => handleExportCSV(list[0]._id, eventName)}
-                      >
-                        {t('bkngMgmt.exportCSV')}
-                      </Button>
-                    </div>
-                    <Table bordered hover responsive>
-                      <thead>
-                        <tr>
-                          <th>{t('bkngMgmt.user')}</th>
-                          <th>{t('bkngMgmt.email')}</th>
-                          <th>{t('bkngMgmt.seat')}</th>
-                          <th>{t('bkngMgmt.date')}</th>
-                          <th>{t('bkngMgmt.status')}</th>
-                          <th>{t('bkngMgmt.actions')}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {list.map((b) => (
-                          <tr key={b._id}>
-                            <td>{b.user?.name || '—'}</td>
-                            <td>{b.user?.email || '—'}</td>
-                            <td>{b.details?.seat || '—'}</td>
-                            <td>{new Date(b.details?.date).toLocaleDateString()}</td>
-                            <td>{t(`bkngMgmt.statuses.${b.status}`)}</td>
-                            <td>
-                              {b.status !== 'cancelled' && (
-                                <Button
-                                  size="sm"
-                                  variant="danger"
-                                  onClick={() => handleCancel(b._id)}
-                                >
-                                  {t('bkngMgmt.cancel')}
-                                </Button>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  </Accordion.Body>
-                </Accordion.Item>
+      {loading ? (
+        <Spinner animation="border" className="d-block mx-auto mt-5" />
+      ) : events.length === 0 ? (
+        <p className="text-center text-muted">{t('bkngMgmt.noBookings')}</p>
+      ) : (
+        <>
+          <Table bordered hover responsive className="align-middle">
+            <thead>
+              <tr>
+                <th>{t('bkngMgmt.event')}</th>
+                <th>{t('bkngMgmt.venue')}</th>
+                <th>{t('bkngMgmt.date')}</th>
+                <th>{t('bkngMgmt.booked')}</th>
+                <th>{t('bkngMgmt.actions')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginated.map((ev) => (
+                <tr key={ev.name}>
+                  <td>{ev.name}</td>
+                  <td>{ev.venue}</td>
+                  <td>{new Date(ev.date).toLocaleDateString()}</td>
+                  <td>{`${ev.booked} / ${ev.capacity}`}</td>
+                  <td>
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      className="me-2"
+                      onClick={() => openModal(ev)}
+                    >
+                      {t('bkngMgmt.view')}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline-success"
+                      onClick={() => handleExportCSV(ev.name)}
+                    >
+                      {t('bkngMgmt.exportCSV')}
+                    </Button>
+                  </td>
+                </tr>
               ))}
-            </Accordion>
-          )}
-        </Tab>
+            </tbody>
+          </Table>
 
-        <Tab eventKey="venues" title={t('bkngMgmt.tabVenues')}>
-          {loading ? (
-            <Spinner animation="border" className="d-block mx-auto mt-4" />
-          ) : venueBookings.length === 0 ? (
+          {totalPages > 1 && (
+            <Pagination className="justify-content-center">
+              <Pagination.Prev
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              />
+              {[...Array(totalPages)].map((_, i) => (
+                <Pagination.Item
+                  key={i}
+                  active={i + 1 === currentPage}
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              />
+            </Pagination>
+          )}
+        </>
+      )}
+
+      <Modal show={showModal} onHide={closeModal} centered size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {selectedEvent ? `${selectedEvent.name} — ${t('bkngMgmt.view')}` : ''}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {modalLoading ? (
+            <Spinner animation="border" className="d-block mx-auto mt-3" />
+          ) : attendees.length === 0 ? (
             <p className="text-center text-muted">{t('bkngMgmt.noBookings')}</p>
           ) : (
-            <Table striped bordered hover responsive>
+            <Table bordered hover responsive className="align-middle">
               <thead>
                 <tr>
-                  <th>{t('bkngMgmt.venueTitle')}</th>
-                  <th>{t('bkngMgmt.date')}</th>
-                  <th>{t('bkngMgmt.time')}</th>
+                  <th>{t('bkngMgmt.seat')}</th>
                   <th>{t('bkngMgmt.user')}</th>
+                  <th>{t('bkngMgmt.email')}</th>
                   <th>{t('bkngMgmt.status')}</th>
+                  <th>{t('bkngMgmt.actions')}</th>
                 </tr>
               </thead>
               <tbody>
-                {venueBookings.map((b) => (
-                  <tr key={b._id}>
-                    <td>{b.details?.venue || '—'}</td>
-                    <td>{new Date(b.details?.date).toLocaleDateString()}</td>
-                    <td>{b.details?.time || '—'}</td>
-                    <td>{b.user?.name || '—'}</td>
-                    <td>{t(`bkngMgmt.statuses.${b.status}`)}</td>
+                {attendees.map((a) => (
+                  <tr key={a._id}>
+                    <td>{a.details?.seat || '—'}</td>
+                    <td>{a.user?.name || '—'}</td>
+                    <td>{a.user?.email || '—'}</td>
+                    <td>{t(`bkngMgmt.statuses.${a.status}`)}</td>
+                    <td>
+                      {a.status !== 'cancelled' && (
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          onClick={() => handleCancel(a._id)}
+                        >
+                          {t('bkngMgmt.cancel')}
+                        </Button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </Table>
           )}
-        </Tab>
-      </Tabs>
+        </Modal.Body>
+        <Modal.Footer>
+          {selectedEvent && (
+            <Button
+              variant="outline-success"
+              onClick={() => handleExportCSV(selectedEvent.name)}
+            >
+              {t('bkngMgmt.exportCSV')}
+            </Button>
+          )}
+          <Button variant="secondary" onClick={closeModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
