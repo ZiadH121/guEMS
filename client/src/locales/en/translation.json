@@ -627,12 +627,9 @@
   "invalidPrice": "Please enter a valid price.",
   "imageUrl": "Event Image URL (optional)",
   "imagePlaceholder": "Paste an image link (optional)",
-  
-  "proposal": {
   "colPrice": "Price",
   "colImage": "Image",
-  "viewImage": "View Image"
-    },
+  "viewImage": "View Image",
   "status": {
     "pending": "Pending",
     "approved": "Approved",
