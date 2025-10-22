@@ -16,7 +16,9 @@ const SubmitProposal = () => {
     slot: '',
     startTime: '',
     endTime: '',
-    sldNeeds: ''
+    sldNeeds: '',
+    price: '',
+    image: ''
   });
   const [venues, setVenues] = useState([]);
   const [message, setMessage] = useState('');
@@ -40,6 +42,11 @@ const SubmitProposal = () => {
     }
     if (new Date(form.date) < new Date()) {
       setMessage(t('proposal.invalidDate'));
+      return;
+    }
+
+    if (!form.price || isNaN(form.price) || form.price < 0) {
+      setMessage(t('proposal.invalidPrice'));
       return;
     }
 
@@ -85,7 +92,9 @@ const SubmitProposal = () => {
         slot: '',
         startTime: '',
         endTime: '',
-        sldNeeds: ''
+        sldNeeds: '',
+        price: '',
+        image: ''
       });
     } catch (err) {
       setMessage(err.message);
@@ -147,14 +156,41 @@ const SubmitProposal = () => {
           />
         </Form.Group>
 
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>{t('proposal.capacity')}</Form.Label>
+              <Form.Control
+                type="number"
+                name="capacity"
+                value={form.capacity}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>{t('proposal.price')}</Form.Label>
+              <Form.Control
+                type="number"
+                name="price"
+                value={form.price}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+
         <Form.Group className="mb-3">
-          <Form.Label>{t('proposal.capacity')}</Form.Label>
+          <Form.Label>{t('proposal.imageUrl')}</Form.Label>
           <Form.Control
-            type="number"
-            name="capacity"
-            value={form.capacity}
+            type="text"
+            name="image"
+            value={form.image}
             onChange={handleChange}
-            required
+            placeholder={t('proposal.imagePlaceholder')}
           />
         </Form.Group>
 

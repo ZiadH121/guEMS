@@ -623,6 +623,10 @@
   "invalidTimeOrder": "Start time must be before end time.",
   "outOfHours": "Time must be between 10:00 AM and 10:00 PM.",
   "colSlot": "Time Slot",
+  "price": "Ticket Price",
+  "invalidPrice": "Please enter a valid price.",
+  "imageUrl": "Event Image URL (optional)",
+  "imagePlaceholder": "Paste an image link (optional)",
   "status": {
     "pending": "Pending",
     "approved": "Approved",
