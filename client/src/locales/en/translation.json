@@ -547,7 +547,18 @@
     "image": "Image URL (optional)",
     "submitButton": "Create Event",
     "success": "Event created successfully.",
-    "error": "Failed to create event."
+    "error": "Failed to create event.",
+    "slotTypeLabel": "Select Slot Type",
+    "presetSlot": "Predefined Slot",
+    "customSlot": "Custom Time Range",
+    "slotLabel": "Time Slot",
+    "selectSlot": "Select a Time Slot",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "missingSlot": "Please select a time slot.",
+    "missingCustomTime": "Please select both start and end times.",
+    "invalidTimeOrder": "Start time must be before end time.",
+    "outOfHours": "Time must be between 10:00 AM and 10:00 PM."
   },
 
 

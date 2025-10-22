@@ -1,8 +1,8 @@
 // CreateEvent.jsx
-// Allows staff/admins to create confirmed events directly
+// Allows staff/admins to create confirmed events directly with hybrid time-slot selection
 
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Container, Form, Button, Alert, Spinner, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../utils/api';
 import { useTranslation } from 'react-i18next';
@@ -21,12 +21,25 @@ const CreateEvent = () => {
     description: '',
     venue: '',
     date: '',
+    slotType: 'preset',
+    slot: '',
+    startTime: '',
+    endTime: '',
     capacity: '',
     price: '',
     image: ''
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+
+  const presetSlots = [
+    '10:00 AM - 12:00 PM',
+    '12:00 PM - 2:00 PM',
+    '2:00 PM - 4:00 PM',
+    '4:00 PM - 6:00 PM',
+    '6:00 PM - 8:00 PM',
+    '8:00 PM - 10:00 PM'
+  ];
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -65,16 +78,42 @@ const CreateEvent = () => {
       return;
     }
 
+    if (form.slotType === 'custom') {
+      if (!form.startTime || !form.endTime) {
+        setMessage({ type: 'danger', text: t('createEvent.missingCustomTime') });
+        setLoading(false);
+        return;
+      }
+      if (form.startTime >= form.endTime) {
+        setMessage({ type: 'danger', text: t('createEvent.invalidTimeOrder') });
+        setLoading(false);
+        return;
+      }
+      if (form.startTime < '10:00' || form.endTime > '22:00') {
+        setMessage({ type: 'danger', text: t('createEvent.outOfHours') });
+        setLoading(false);
+        return;
+      }
+    } else if (form.slotType === 'preset' && !form.slot) {
+      setMessage({ type: 'danger', text: t('createEvent.missingSlot') });
+      setLoading(false);
+      return;
+    }
+
     try {
       const selectedVenue = venues.find((v) => v._id === form.venue);
       const body = {
         type: 'event',
-        itemId: `${selectedVenue?.name || 'Unknown Venue'}_${Date.now()}`, // unique ID
+        itemId: `${selectedVenue?.name || 'Unknown Venue'}_${Date.now()}`,
         details: {
           event: form.name,
           description: form.description,
           venue: selectedVenue?.name || 'Unknown',
           date: form.date,
+          slotType: form.slotType,
+          slot: form.slot,
+          startTime: form.startTime,
+          endTime: form.endTime,
           capacity: Number(form.capacity),
           price: Number(form.price),
           image: form.image
@@ -100,6 +139,10 @@ const CreateEvent = () => {
         description: '',
         venue: '',
         date: '',
+        slotType: 'preset',
+        slot: '',
+        startTime: '',
+        endTime: '',
         capacity: '',
         price: '',
         image: ''
@@ -116,7 +159,7 @@ const CreateEvent = () => {
 
   return (
     <div className="fade-in">
-      <Container className="py-5" style={{ maxWidth: '600px' }}>
+      <Container className="py-5" style={{ maxWidth: '650px' }}>
         <div className="d-flex justify-content-start mb-3">
           <Button variant="secondary" onClick={() => navigate(-1)}>
             {t('createEvent.backButton')}
@@ -186,28 +229,84 @@ const CreateEvent = () => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>{t('createEvent.capacity')}</Form.Label>
-            <Form.Control
-              type="number"
-              name="capacity"
-              value={form.capacity}
+            <Form.Label>{t('createEvent.slotTypeLabel')}</Form.Label>
+            <Form.Select
+              name="slotType"
+              value={form.slotType}
               onChange={handleChange}
-              required
-              placeholder="e.g. 100"
-            />
+            >
+              <option value="preset">{t('createEvent.presetSlot')}</option>
+              <option value="custom">{t('createEvent.customSlot')}</option>
+            </Form.Select>
           </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>{t('createEvent.price')}</Form.Label>
-            <Form.Control
-              type="number"
-              name="price"
-              value={form.price}
-              onChange={handleChange}
-              required
-              placeholder="e.g. 100"
-            />
-          </Form.Group>
+          {form.slotType === 'preset' && (
+            <Form.Group className="mb-3">
+              <Form.Label>{t('createEvent.slotLabel')}</Form.Label>
+              <Form.Select
+                name="slot"
+                value={form.slot}
+                onChange={handleChange}
+              >
+                <option value="">{t('createEvent.selectSlot')}</option>
+                {presetSlots.map((s, i) => (
+                  <option key={i} value={s}>{s}</option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          )}
+
+          {form.slotType === 'custom' && (
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>{t('createEvent.startTime')}</Form.Label>
+                <Form.Control
+                  type="time"
+                  name="startTime"
+                  value={form.startTime}
+                  onChange={handleChange}
+                />
+              </Col>
+              <Col>
+                <Form.Label>{t('createEvent.endTime')}</Form.Label>
+                <Form.Control
+                  type="time"
+                  name="endTime"
+                  value={form.endTime}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Row>
+          )}
+
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>{t('createEvent.capacity')}</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="capacity"
+                  value={form.capacity}
+                  onChange={handleChange}
+                  required
+                  placeholder="e.g. 100"
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>{t('createEvent.price')}</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="price"
+                  value={form.price}
+                  onChange={handleChange}
+                  required
+                  placeholder="e.g. 100"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
 
           <Form.Group className="mb-4">
             <Form.Label>{t('createEvent.image')}</Form.Label>
