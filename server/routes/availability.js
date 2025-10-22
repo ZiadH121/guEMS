@@ -7,33 +7,32 @@ const router = express.Router();
 
 router.get('/availability/event/:id', async (req, res) => {
   try {
-    const eventId = decodeURIComponent(req.params.id);
-    const [name, date, time] = eventId.split('__');
+    const eventId = req.params.id;
+
+    const eventInfo = await Booking.findOne({
+      $or: [{ _id: eventId }, { itemId: eventId }],
+      type: 'event'
+    });
+
+    if (!eventInfo) {
+      console.warn(`[AVAILABILITY] Event not found for id: ${eventId}`);
+      return res.status(404).json({ error: res.__('availability.eventNotFound') });
+    }
+
+    const eventName = eventInfo.details.event;
+    const eventDate = eventInfo.details.date;
+    const eventCapacity = parseInt(eventInfo.details.capacity || 0);
 
     const eventBookings = await Booking.find({
-      itemId: eventId,
       type: 'event',
+      'details.event': eventName,
+      'details.date': eventDate,
       status: { $in: ['pending', 'confirmed'] }
     });
 
     const takenSeats = new Set(eventBookings.map(b => b.details?.seat));
-    let capacity = parseInt(eventBookings[0]?.details?.capacity || 0);
 
-    if (!capacity) {
-      const eventInfo = await Booking.findOne({
-        type: 'event',
-        'details.event': name,
-        'details.date': date
-      });
-      capacity = parseInt(eventInfo?.details?.capacity || 0);
-    }
-
-    if (!capacity) {
-      const venue = await Venue.findOne({ name: new RegExp(`^${name}$`, 'i'), date });
-      capacity = parseInt(venue?.capacity || 24);
-    }
-
-    const seats = Array.from({ length: capacity }).map((_, i) => {
+    const seats = Array.from({ length: eventCapacity }).map((_, i) => {
       const seatId = (i + 1).toString();
       return {
         id: seatId,
