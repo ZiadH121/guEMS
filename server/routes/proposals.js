@@ -45,6 +45,11 @@ router.post('/', verifyToken, async (req, res) => {
       }
     }
 
+    if (price < 0) {
+  return res.status(400).json({ error: res.__('proposal.invalidPrice') });
+    }
+
+
     const newProposal = new Proposal({
       title,
       description,

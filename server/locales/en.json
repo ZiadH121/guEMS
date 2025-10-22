@@ -113,7 +113,8 @@
         "missingSlot": "Please select a time slot.",
         "missingCustomTime": "Please select both start and end times for a custom slot.",
         "invalidTimeOrder": "The start time must be earlier than the end time.",
-        "outOfHours": "Custom event times must be between 10:00 AM and 10:00 PM."
+        "outOfHours": "Custom event times must be between 10:00 AM and 10:00 PM.",
+        "invalidPrice": "Price must be a positive number."
     }
 
 }
