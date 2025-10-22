@@ -48,7 +48,7 @@ const BookingManagementTab = () => {
 
   useEffect(() => {
     fetchBookings();
-  }, []);
+}, [currentPage]);
 
   const filtered = bookings.filter((b) => {
     const matchesSearch =
