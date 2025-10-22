@@ -45,8 +45,8 @@ router.post('/', verifyToken, async (req, res) => {
       }
     }
 
-    if (price < 0) {
-  return res.status(400).json({ error: res.__('proposal.invalidPrice') });
+    if (req.body.price && req.body.price < 0) {
+      return res.status(400).json({ error: res.__('proposal.invalidPrice') });
     }
 
 
