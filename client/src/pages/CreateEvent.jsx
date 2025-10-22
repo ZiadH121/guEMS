@@ -102,11 +102,12 @@ const CreateEvent = () => {
 
     try {
       const selectedVenue = venues.find((v) => v._id === form.venue);
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
       const body = {
         type: 'event',
-        itemId: `${selectedVenue?.name || 'Unknown Venue'}_${Date.now()}`,
+        itemId: form.name.trim() + '_' + form.date,
         details: {
-          event: form.name,
+          event: form.name.trim(),
           description: form.description,
           venue: selectedVenue?.name || 'Unknown',
           date: form.date,
@@ -114,14 +115,14 @@ const CreateEvent = () => {
           slot: form.slot,
           startTime: form.startTime,
           endTime: form.endTime,
-          capacity: Number(form.capacity),
-          price: Number(form.price),
-          image: form.image
-        },
-        creator: {
-          id: JSON.parse(localStorage.getItem('user') || '{}')._id,
-          name: JSON.parse(localStorage.getItem('user') || '{}').name,
-          email: JSON.parse(localStorage.getItem('user') || '{}').email
+          capacity: Number(form.capacity) || 0,
+          price: Number(form.price) || 0,
+          image: form.image,
+          creator: {
+            id: user._id,
+            name: user.name,
+            email: user.email
+          }
         },
         status: 'confirmed'
       };

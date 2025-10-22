@@ -42,21 +42,30 @@ const TicketBooking = () => {
             b.details?.date
         );
 
-        const result = events.map((b) => ({
-          _id: b._id,
+        const result = [];
+      const seen = new Set();
+
+      for (const b of events) {
+        const key = b.details.event + '_' + b.details.date;
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        result.push({
+          _id: b.itemId || b._id,
           event: b.details.event,
           description: b.details.description,
           venue: b.details.venue,
           date: b.details.date,
-          capacity: b.details.capacity,
+          capacity: b.details.capacity || 0,
           image: b.details.image || null,
           price: b.details.price || 0,
           slotType: b.details.slotType,
           slot: b.details.slot,
           startTime: b.details.startTime,
           endTime: b.details.endTime
-        }));
-
+        });
+      }
+      
         setEvents(result);
       } catch (err) {
         console.error('Failed to fetch bookings:', err);

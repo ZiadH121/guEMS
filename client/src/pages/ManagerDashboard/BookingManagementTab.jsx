@@ -71,7 +71,7 @@ const BookingManagementTab = () => {
     const venue = grouped[name][0].details?.venue || '—';
     const date = grouped[name][0].details?.date || '—';
     const capacity = grouped[name][0].details?.capacity || 0;
-    const confirmed = grouped[name].filter((b) => b.status === 'confirmed').length;
+    const confirmed = grouped[name].filter((b) => b.status === 'confirmed' && b.user?.role !== 'staff').length;
     return {
       name,
       venue,
@@ -119,7 +119,7 @@ const BookingManagementTab = () => {
     setShowModal(true);
 
     const filteredAttendees = event.list.filter(
-      (a) => a.user?._id !== event.creator?._id
+      (a) => a.user?.role !== 'staff' && a.user?.role !== 'admin'
     );
     setAttendees(filteredAttendees);
     setModalLoading(false);
