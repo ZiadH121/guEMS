@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 // import UserManagementTab from './UserManagementTab';
 // import VenueManagementTab from './VenueManagementTab';
 // import FeedbackManagementTab from './FeedbackManagementTab';
-// import BookingManagementTab from './BookingManagementTab';
+import BookingManagementTab from './BookingManagementTab';
 import ProposalsTab from './ProposalsTab';
 
 const ManagerDashboard = () => {
@@ -31,15 +31,15 @@ const ManagerDashboard = () => {
       <Tab eventKey="proposals" title={t('mgmtDash.proposals')}>
         <ProposalsTab />
       </Tab>
+            <Tab eventKey="bookings" title={t('mgmtDash.bookingMgmt')}>
+        <BookingManagementTab />
+      </Tab>
       {/*
       <Tab eventKey="users" title={t('mgmtDash.userMgmt')}>
         <UserManagementTab />
       </Tab>
       <Tab eventKey="venues" title={t('mgmtDash.venueMgmt')}>
         <VenueManagementTab />
-      </Tab>
-      <Tab eventKey="bookings" title={t('mgmtDash.bookingMgmt')}>
-        <BookingManagementTab />
       </Tab>
       <Tab eventKey="feedback" title={t('mgmtDash.feedbackMgmt')}>
         <FeedbackManagementTab />
