@@ -508,7 +508,14 @@
     "bookButton": "Book Now",
     "noDescription": "No description provided.",
     "capacity": "Capacity",
-    "date": "Date"
+    "date": "Date",
+    "time": "Time",
+    "price": "Price",
+    "free": "Free",
+    "noImage": "No image available",
+    "readMore": "Read more",
+    "fullDescription": "Event Description",
+    "close": "Close"
   },
 
   "venueBook": {
