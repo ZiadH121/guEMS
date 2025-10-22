@@ -266,19 +266,27 @@ router.get('/admin/bookings', verifyToken, requireRole('staff'), async (req, res
   }
 });
 
-router.get('/bookings/export/:eventId', verifyToken, requireRole('staff'), async (req, res) => {
+router.get('/bookings/export/:eventName', verifyToken, requireRole('staff'), async (req, res) => {
   try {
+    const eventName = decodeURIComponent(req.params.eventName);
+
     const bookings = await Booking.find({
       type: 'event',
       status: 'confirmed',
-      itemId: req.params.eventId
-    }).populate('user', 'name email');
+      'details.event': eventName
+    })
+      .populate('user', 'name email')
+      .sort({ createdAt: 1 });
 
     if (bookings.length === 0) {
       return res.status(404).json({ error: res.__('bookings.noAttendees') });
     }
 
-    const rows = bookings.map(b => ({
+    const filtered = bookings.filter(
+      b => b.user?._id.toString() !== bookings[0].details?.creator?._id?.toString()
+    );
+
+    const rows = filtered.map(b => ({
       Name: b.user?.name || '—',
       Email: b.user?.email || '—',
       Seat: b.details?.seat || '—',
@@ -290,7 +298,7 @@ router.get('/bookings/export/:eventId', verifyToken, requireRole('staff'), async
     csv += rows.map(r => `${r.Name},${r.Email},${r.Seat},${r.Date},${r.Venue}`).join('\n');
 
     res.header('Content-Type', 'text/csv');
-    res.attachment(`attendees_${req.params.eventId}.csv`);
+    res.attachment(`attendees_${eventName}.csv`);
     res.send(csv);
   } catch (err) {
     console.error('CSV export error:', err);
@@ -298,5 +306,60 @@ router.get('/bookings/export/:eventId', verifyToken, requireRole('staff'), async
   }
 });
 
+router.get('/bookings/export-events', verifyToken, requireRole('staff'), async (req, res) => {
+  try {
+    const bookings = await Booking.find({
+      type: 'event',
+      'details.event': { $exists: true }
+    })
+      .populate('user', 'name email')
+      .sort({ createdAt: -1 });
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ error: res.__('bookings.noEventsFound') });
+    }
+
+    const grouped = {};
+    for (const b of bookings) {
+      const name = b.details?.event || 'Unnamed Event';
+      if (!grouped[name]) {
+        grouped[name] = {
+          name,
+          venue: b.details?.venue || '—',
+          date: b.details?.date || '—',
+          capacity: b.details?.capacity || 0,
+          creator: b.details?.creator || b.user,
+          confirmed: 0
+        };
+      }
+      if (b.status === 'confirmed') grouped[name].confirmed += 1;
+    }
+
+    const rows = Object.values(grouped).map(g => ({
+      Event: g.name,
+      Venue: g.venue,
+      Date: new Date(g.date).toLocaleDateString(),
+      Capacity: g.capacity,
+      Confirmed: g.confirmed,
+      Creator: g.creator?.name || '—',
+      Email: g.creator?.email || '—'
+    }));
+
+    let csv = 'Event,Venue,Date,Capacity,Confirmed,Creator,Email\n';
+    csv += rows
+      .map(
+        r =>
+          `${r.Event},${r.Venue},${r.Date},${r.Capacity},${r.Confirmed},${r.Creator},${r.Email}`
+      )
+      .join('\n');
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('events_summary.csv');
+    res.send(csv);
+  } catch (err) {
+    console.error('Events CSV export error:', err);
+    res.status(500).json({ error: res.__('bookings.exportFail') });
+  }
+});
 
 module.exports = router;

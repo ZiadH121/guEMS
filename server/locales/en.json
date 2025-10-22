@@ -40,7 +40,8 @@
         "cancelFail": "Failed to cancel booking",
         "failedLoadEvents": "Failed to load events",
         "noAttendees": "No attendees found for this event.",
-        "exportFail": "Failed to export attendee list."
+        "exportFail": "Failed to export attendee list.",
+        "noEventsFound": "No events found to export."
     },
 
     "feedback": {
