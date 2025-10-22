@@ -183,7 +183,14 @@ const TicketBooking = () => {
         <Modal.Header closeButton>
           <Modal.Title>{t('tickets.fullDescription')}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body
+          style={{
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            maxHeight: '400px',
+            overflowY: 'auto'
+          }}
+        >
           <p>{selectedDescription}</p>
         </Modal.Body>
         <Modal.Footer>
