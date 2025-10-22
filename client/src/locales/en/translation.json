@@ -370,7 +370,10 @@
     "booked": "Booked",
     "pending": "Pending",
     "selectedSeat": "Selected Seat:",
-    "proceedToPay": "Proceed to Payment"
+    "proceedToPay": "Proceed to Payment",
+    "price": "Price",
+    "capacity": "Capacity",
+    "noSeats": "No seats available for this event."
   },
 
   "metrics": {

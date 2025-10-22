@@ -140,34 +140,49 @@ const LiveBooking = () => {
       <div className="d-flex justify-content-start mb-3">
         <Button variant="secondary" onClick={() => navigate(-1)}>{t('liveBook.backButton')}</Button>
       </div>
-        <h2 className="text-brown mb-3">{t('liveBook.title')}</h2>
-        <h5>{event?.name}</h5>
-        <p><strong>{t('liveBook.date')}</strong> {event?.date}</p>
-        <p><strong>{t('liveBook.time')}</strong> {formatSlotRange(event?.time)}</p>
-        <p><strong>{t('liveBook.venue')}</strong> {event?.venue || event?.name}</p>
+        <h2 className="text-brown mb-4">{t('liveBook.title')}</h2>
+          <Card className="shadow-sm border-0 rounded-4 mx-auto mb-4" style={{ maxWidth: '500px' }}>
+            <Card.Body className="text-start">
+              <h4 className="text-brown fw-bold mb-3">{event?.name || event?.event}</h4>
+              <p className="mb-1"><strong>{t('liveBook.date')}</strong> {new Date(event?.date).toLocaleDateString()}</p>
+              <p className="mb-1"><strong>{t('liveBook.time')}</strong> {formatSlotRange(event?.time || event?.slot || `${event?.startTime} - ${event?.endTime}`)}</p>
+              <p className="mb-1"><strong>{t('liveBook.venue')}</strong> {event?.venue || event?.name}</p>
+              <p className="mb-1"><strong>{t('liveBook.price')}</strong> {event?.price ? `${event.price} EGP` : t('tickets.free')}</p>
+              {event?.capacity && (
+                <p className="mb-0"><strong>{t('liveBook.capacity')}</strong> {event.capacity}</p>
+              )}
+            </Card.Body>
+          </Card>
 
-        <div className="d-flex flex-wrap justify-content-center gap-2 mt-4">
-          {seats.map(seat => (
+        <div
+          className="d-flex flex-wrap justify-content-center gap-2 mt-4"
+          style={{ maxWidth: '600px', margin: '0 auto' }}
+        >
+          {seats.map((seat) => (
             <div key={seat.id} style={{ position: 'relative' }}>
               <div
                 onClick={() => handleClick(seat)}
                 style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 4,
+                  width: 34,
+                  height: 34,
+                  borderRadius: 6,
                   backgroundColor: getColor(seat.status, selectedSeat === seat.id, seat.id),
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#fff',
-                  fontSize: '0.8rem',
+                  fontSize: '0.85rem',
                   cursor: seat.status === 'available' ? 'pointer' : 'not-allowed',
-                  border: mySeat === seat.id ? '2px solid white' : 'none'
+                  border: mySeat === seat.id ? '2px solid white' : 'none',
+                  transition: 'transform 0.1s ease-in-out',
                 }}
                 title={t('liveBook.seatLabel', { id: seat.id })}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
               >
                 {seat.id}
               </div>
+              
               {(seat.status === 'booked' || seat.status === 'pending') && (
                 <Button
                   variant="light"
