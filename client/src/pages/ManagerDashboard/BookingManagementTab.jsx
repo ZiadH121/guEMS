@@ -5,10 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { apiFetch } from '../../utils/api';
 import { saveAs } from 'file-saver';
 
-  useEffect(() => {
-    document.title = `GEMS - ${t('titles.mgmtDashboard')}`;
-  }, [t]);
-
 const BookingManagementTab = () => {
   const { t } = useTranslation();
   const [bookings, setBookings] = useState([]);
@@ -17,6 +13,10 @@ const BookingManagementTab = () => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    document.title = `GEMS - ${t('titles.mgmtDashboard')}`;
+  }, [t]);
 
   const fetchBookings = async () => {
     try {
