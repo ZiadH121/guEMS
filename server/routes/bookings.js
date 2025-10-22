@@ -241,7 +241,20 @@ router.delete('/bookings/:id', verifyToken, async (req, res) => {
 
 router.get('/admin/bookings', verifyToken, requireRole('staff'), async (req, res) => {
   try {
-    const bookings = await Booking.find()
+    const { type, status, search } = req.query;
+    const query = {};
+
+    if (type && type !== 'all') query.type = type;
+    if (status && status !== 'all') query.status = status;
+
+    if (search && search.trim()) {
+      query.$or = [
+        { 'details.event': { $regex: search, $options: 'i' } },
+        { 'details.venue': { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const bookings = await Booking.find(query)
       .populate('user', 'name email')
       .populate('venueRef', 'name')
       .sort({ createdAt: -1 });
@@ -252,5 +265,38 @@ router.get('/admin/bookings', verifyToken, requireRole('staff'), async (req, res
     res.status(500).json({ error: res.__('bookings.failedLoadBookings') });
   }
 });
+
+router.get('/bookings/export/:eventId', verifyToken, requireRole('staff'), async (req, res) => {
+  try {
+    const bookings = await Booking.find({
+      type: 'event',
+      status: 'confirmed',
+      itemId: req.params.eventId
+    }).populate('user', 'name email');
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ error: res.__('bookings.noAttendees') });
+    }
+
+    const rows = bookings.map(b => ({
+      Name: b.user?.name || '—',
+      Email: b.user?.email || '—',
+      Seat: b.details?.seat || '—',
+      Date: new Date(b.details?.date).toLocaleDateString(),
+      Venue: b.details?.venue || '—'
+    }));
+
+    let csv = 'Name,Email,Seat,Date,Venue\n';
+    csv += rows.map(r => `${r.Name},${r.Email},${r.Seat},${r.Date},${r.Venue}`).join('\n');
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment(`attendees_${req.params.eventId}.csv`);
+    res.send(csv);
+  } catch (err) {
+    console.error('CSV export error:', err);
+    res.status(500).json({ error: res.__('bookings.exportFail') });
+  }
+});
+
 
 module.exports = router;
