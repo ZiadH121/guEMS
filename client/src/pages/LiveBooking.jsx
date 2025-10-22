@@ -42,7 +42,7 @@ const LiveBooking = () => {
 
       try {
         const [resAvail, resMyBookings] = await Promise.all([
-          apiFetch(`/availability/event/${id}`),
+          apiFetch(`/availability/event/${event._id}`),
           apiFetch('/bookings', {
             headers: { Authorization: `Bearer ${token}` }
           })
@@ -54,7 +54,7 @@ const LiveBooking = () => {
         setSeats(available.seats || []);
 
         const found = bookings.find(
-          b => b.itemId === `${event.name}__${event.date}__${event.time}` && b.status === 'confirmed'
+          b => b.itemId === event._id && b.status === 'confirmed'
         );
         if (found) setMySeat(found.details.seat);
       } catch (err) {
@@ -105,11 +105,14 @@ const LiveBooking = () => {
         },
         body: JSON.stringify({
           type: 'event',
-          itemId: `${event.name}__${event.date}__${event.time}`,
+          itemId: event._id,
           details: {
-            name: event.name,
+            name: event.name || event.event,
             date: event.date,
-            time: event.time,
+            slotType: event.slotType,
+            slot: event.slot,
+            startTime: event.startTime,
+            endTime: event.endTime,
             seat: seat.id
           }
         })
