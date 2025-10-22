@@ -358,18 +358,17 @@ router.get('/bookings/export-events', verifyToken, requireRole('staff'), async (
       Email: g.creator?.email || '—'
     }));
 
-    
-    let csv = 'Event,Venue,Date,Capacity,Confirmed,Creator,Email\n';
-    csv += rows
-      .map(
-        r =>
-          `${r.Event},${r.Venue},${r.Date},${r.Capacity},${r.Confirmed},${r.Creator},${r.Email}`
-      )
-      .join('\n');
 
-    res.header('Content-Type', 'text/csv');
-    res.attachment('events_summary.csv');
-    res.send(csv);
+    let csv = 'Name,Email,Seat,Date,Venue\n';
+      csv += rows.map(r => `${r.Name},${r.Email},${r.Seat},${r.Date},${r.Venue}`).join('\n');
+
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename*=UTF-8''${encodeURIComponent(`attendees_${eventName}.csv`)}`
+      );
+      res.send('\uFEFF' + csv);
+
   } catch (err) {
     console.error('Events CSV export error:', err);
     res.status(500).json({ error: res.__('bookings.exportFail') });
