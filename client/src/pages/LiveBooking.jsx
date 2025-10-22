@@ -41,8 +41,11 @@ const LiveBooking = () => {
       const token = localStorage.getItem('token');
 
       try {
+        const itemId = encodeURIComponent(
+          event._id || `${event.name}__${event.date}__${event.slot || `${event.startTime}-${event.endTime}`}`
+        );
         const [resAvail, resMyBookings] = await Promise.all([
-          apiFetch(`/availability/event/${event._id}`),
+          apiFetch(`/availability/event/${itemId}`),
           apiFetch('/bookings', {
             headers: { Authorization: `Bearer ${token}` }
           })
@@ -182,7 +185,7 @@ const LiveBooking = () => {
               >
                 {seat.id}
               </div>
-              
+
               {(seat.status === 'booked' || seat.status === 'pending') && (
                 <Button
                   variant="light"

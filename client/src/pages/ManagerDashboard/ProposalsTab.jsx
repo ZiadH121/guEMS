@@ -119,7 +119,7 @@ const ProposalsTab = () => {
         <tbody>
           {proposals.length === 0 ? (
             <tr>
-              <td colSpan="9" className="text-center">
+              <td colSpan="12" className="text-center">
                 {t('proposal.noProposals')}
               </td>
             </tr>
