@@ -191,16 +191,18 @@
     "noBookings": "No bookings found.",
     "cancelConfirm": "Are you sure you want to cancel this booking?",
     "exportError": "Failed to export CSV file.",
-    "statuses": {
-      "confirmed": "Confirmed",
-      "pending": "Pending",
-      "cancelled": "Cancelled"
-    },
     "seat": "Seat",
     "user": "User",
     "email": "Email",
     "status": "Status",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "creator": "Creator",
+    "exportEvents": "Export Events CSV",
+    "statuses": {
+      "confirmed": "Confirmed",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
+    }
   },
 
   "fdbckMgmt": {

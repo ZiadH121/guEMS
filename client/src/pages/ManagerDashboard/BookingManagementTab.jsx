@@ -1,9 +1,10 @@
-// BookingManagementTab.jsx – GEMS Event Booking Management
+// BookingManagementTab.jsx – GEMS Event Booking Management (Improved UX + CSV Export)
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Alert, Spinner, Form, Modal, Pagination } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { apiFetch } from '../../utils/api';
 import { saveAs } from 'file-saver';
+import { FaEye, FaFileCsv, FaTrash } from 'react-icons/fa';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -51,8 +52,7 @@ const BookingManagementTab = () => {
       !search ||
       b.details?.event?.toLowerCase().includes(search.toLowerCase()) ||
       b.user?.name?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus =
-      statusFilter === 'all' || b.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || b.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -63,14 +63,22 @@ const BookingManagementTab = () => {
     return acc;
   }, {});
 
-  const events = Object.keys(grouped).map((name) => ({
-    name,
-    venue: grouped[name][0].details?.venue || '—',
-    date: grouped[name][0].details?.date || '—',
-    capacity: grouped[name][0].details?.capacity || 0,
-    booked: grouped[name].filter((b) => b.status === 'confirmed').length,
-    list: grouped[name]
-  }));
+  const events = Object.keys(grouped).map((name) => {
+    const creator = grouped[name][0].details?.creator || grouped[name][0].user;
+    const venue = grouped[name][0].details?.venue || '—';
+    const date = grouped[name][0].details?.date || '—';
+    const capacity = grouped[name][0].details?.capacity || 0;
+    const confirmed = grouped[name].filter((b) => b.status === 'confirmed').length;
+    return {
+      name,
+      venue,
+      date,
+      capacity,
+      booked: confirmed,
+      creator,
+      list: grouped[name]
+    };
+  });
 
   const totalPages = Math.ceil(events.length / ITEMS_PER_PAGE);
   const paginated = events.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -89,11 +97,29 @@ const BookingManagementTab = () => {
     }
   };
 
+  const handleExportAllEvents = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await apiFetch(`/bookings/export-events`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error();
+      const blob = await res.blob();
+      saveAs(blob, `GEMS_Events_List.csv`);
+    } catch {
+      alert(t('bkngMgmt.exportError'));
+    }
+  };
+
   const openModal = (event) => {
     setSelectedEvent(event);
     setModalLoading(true);
     setShowModal(true);
-    setAttendees(event.list);
+
+    const filteredAttendees = event.list.filter(
+      (a) => a.user?._id !== event.creator?._id
+    );
+    setAttendees(filteredAttendees);
     setModalLoading(false);
   };
 
@@ -108,9 +134,7 @@ const BookingManagementTab = () => {
     try {
       const res = await apiFetch(`/bookings/${id}`, {
         method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -125,7 +149,7 @@ const BookingManagementTab = () => {
       <h4 className="text-center mb-4">{t('bkngMgmt.title')}</h4>
       {error && <Alert variant="danger" className="text-center">{error}</Alert>}
 
-      <Form className="d-flex flex-wrap justify-content-center mb-4 gap-2">
+      <Form className="d-flex flex-wrap justify-content-center align-items-center mb-4 gap-2">
         <Form.Control
           type="text"
           placeholder={t('bkngMgmt.search')}
@@ -143,6 +167,9 @@ const BookingManagementTab = () => {
           <option value="pending">{t('bkngMgmt.filterPending')}</option>
           <option value="cancelled">{t('bkngMgmt.filterCancelled')}</option>
         </Form.Select>
+        <Button variant="outline-success" size="sm" onClick={handleExportAllEvents}>
+          <FaFileCsv className="me-1" /> {t('bkngMgmt.exportEvents')}
+        </Button>
       </Form>
 
       {loading ? (
@@ -151,14 +178,15 @@ const BookingManagementTab = () => {
         <p className="text-center text-muted">{t('bkngMgmt.noBookings')}</p>
       ) : (
         <>
-          <Table bordered hover responsive className="align-middle">
-            <thead>
+          <Table bordered hover responsive className="align-middle shadow-sm">
+            <thead className="table-light">
               <tr>
                 <th>{t('bkngMgmt.event')}</th>
                 <th>{t('bkngMgmt.venue')}</th>
                 <th>{t('bkngMgmt.date')}</th>
+                <th>{t('bkngMgmt.creator')}</th>
                 <th>{t('bkngMgmt.booked')}</th>
-                <th>{t('bkngMgmt.actions')}</th>
+                <th className="text-center">{t('bkngMgmt.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -167,22 +195,23 @@ const BookingManagementTab = () => {
                   <td>{ev.name}</td>
                   <td>{ev.venue}</td>
                   <td>{new Date(ev.date).toLocaleDateString()}</td>
+                  <td>{ev.creator?.name || '—'}</td>
                   <td>{`${ev.booked} / ${ev.capacity}`}</td>
-                  <td>
+                  <td className="text-center">
                     <Button
                       size="sm"
-                      variant="primary"
+                      variant="outline-primary"
                       className="me-2"
                       onClick={() => openModal(ev)}
                     >
-                      {t('bkngMgmt.view')}
+                      <FaEye className="me-1" /> {t('bkngMgmt.view')}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline-success"
                       onClick={() => handleExportCSV(ev.name)}
                     >
-                      {t('bkngMgmt.exportCSV')}
+                      <FaFileCsv className="me-1" /> {t('bkngMgmt.exportCSV')}
                     </Button>
                   </td>
                 </tr>
@@ -247,10 +276,10 @@ const BookingManagementTab = () => {
                       {a.status !== 'cancelled' && (
                         <Button
                           size="sm"
-                          variant="danger"
+                          variant="outline-danger"
                           onClick={() => handleCancel(a._id)}
                         >
-                          {t('bkngMgmt.cancel')}
+                          <FaTrash className="me-1" /> {t('bkngMgmt.cancel')}
                         </Button>
                       )}
                     </td>
@@ -266,7 +295,7 @@ const BookingManagementTab = () => {
               variant="outline-success"
               onClick={() => handleExportCSV(selectedEvent.name)}
             >
-              {t('bkngMgmt.exportCSV')}
+              <FaFileCsv className="me-1" /> {t('bkngMgmt.exportCSV')}
             </Button>
           )}
           <Button variant="secondary" onClick={closeModal}>
