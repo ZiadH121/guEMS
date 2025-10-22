@@ -109,6 +109,8 @@ const ProposalsTab = () => {
             <th>{t('proposal.colVenue')}</th>
             <th>{t('proposal.colDate')}</th>
             <th>{t('proposal.colSlot')}</th>
+            <th>{t('proposal.colPrice')}</th>
+            <th>{t('proposal.colImage')}</th>
             <th>{t('proposal.colCapacity')}</th>
             <th>{t('proposal.colStatus')}</th>
             <th>{t('proposal.colActions')}</th>
@@ -203,6 +205,16 @@ const ProposalsTab = () => {
                     : p.startTime && p.endTime
                     ? `Custom: ${formatTime(p.startTime)} - ${formatTime(p.endTime)}`
                     : '—'}
+                </td>
+                <td>{p.price ? `${p.price} EGP` : '—'}</td>
+                <td>
+                  {p.image ? (
+                    <a href={p.image} target="_blank" rel="noreferrer">
+                      {t('proposal.viewImage')}
+                    </a>
+                  ) : (
+                    '—'
+                  )}
                 </td>
                 <td>{p.capacity}</td>
                 <td>{t(`proposal.status.${p.status}`)}</td>
