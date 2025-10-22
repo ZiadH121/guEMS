@@ -358,6 +358,7 @@ router.get('/bookings/export-events', verifyToken, requireRole('staff'), async (
       Email: g.creator?.email || '—'
     }));
 
+    
     let csv = 'Event,Venue,Date,Capacity,Confirmed,Creator,Email\n';
     csv += rows
       .map(
