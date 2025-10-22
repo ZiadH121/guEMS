@@ -241,7 +241,7 @@ router.delete('/bookings/:id', verifyToken, async (req, res) => {
 
 router.get('/admin/bookings', verifyToken, requireRole('staff'), async (req, res) => {
   try {
-    const { type, status, search } = req.query;
+    const { type, status, search, page = 1, limit = 20 } = req.query;
     const query = {};
 
     if (type && type !== 'all') query.type = type;
@@ -254,12 +254,24 @@ router.get('/admin/bookings', verifyToken, requireRole('staff'), async (req, res
       ];
     }
 
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const total = await Booking.countDocuments(query);
+
     const bookings = await Booking.find(query)
       .populate('user', 'name email')
       .populate('venueRef', 'name')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
 
-    res.json(bookings);
+    res.json({
+      bookings,
+      pagination: {
+        total,
+        page: parseInt(page),
+        totalPages: Math.ceil(total / parseInt(limit))
+      }
+    });
   } catch (err) {
     console.error('Admin booking fetch error:', err);
     res.status(500).json({ error: res.__('bookings.failedLoadBookings') });

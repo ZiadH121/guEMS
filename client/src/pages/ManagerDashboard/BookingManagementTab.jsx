@@ -10,6 +10,7 @@ const ITEMS_PER_PAGE = 10;
 
 const BookingManagementTab = () => {
   const { t } = useTranslation();
+  const [totalPages, setTotalPages] = useState(1);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -30,12 +31,14 @@ const BookingManagementTab = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await apiFetch(`/admin/bookings?type=event`, {
+      const res = await apiFetch(`/admin/bookings?type=event&page=${currentPage}&limit=10`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to fetch bookings');
-      setBookings(data);
+      setBookings(data.bookings || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+
     } catch (err) {
       setError(err.message);
     } finally {
@@ -80,7 +83,6 @@ const BookingManagementTab = () => {
     };
   });
 
-  const totalPages = Math.ceil(events.length / ITEMS_PER_PAGE);
   const paginated = events.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const handleExportCSV = async (eventName) => {
