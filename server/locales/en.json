@@ -19,7 +19,9 @@
     "availability": {
         "noVenue": "Venue not found",
         "loadFail": "Failed to load availability",
-        "seatLoadFail": "Failed to load seats"
+        "seatLoadFail": "Failed to load seat availability. Please try again later.",
+        "eventNotFound": "Event not found.",
+        "venueFallback": "Using venue capacity due to missing event data."
     },
 
     "bookings": {

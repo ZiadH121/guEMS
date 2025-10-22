@@ -5,58 +5,46 @@ const Booking = require('../models/Booking');
 const Venue = require('../models/Venue');
 const router = express.Router();
 
-router.get('/availability/venue/:id', async (req, res) => {
+router.get('/availability/event/:id', async (req, res) => {
   try {
-    const [name, rawDate] = decodeURIComponent(req.params.id).split('__');
-    const date = rawDate;
+    const eventId = decodeURIComponent(req.params.id);
+    const [name, date, time] = eventId.split('__');
 
-    const venue = await Venue.findOne({
-      name: new RegExp(`^${name}$`, 'i'),
-      date
-    });
-
-    if (!venue) return res.status(404).json({ error: res.__('availability.noVenue') });
-
-    const bookings = await Booking.find({
-      type: 'venue',
-      'details.name': venue.name,
-      'details.date': venue.date,
+    const eventBookings = await Booking.find({
+      itemId: eventId,
+      type: 'event',
       status: { $in: ['pending', 'confirmed'] }
     });
 
-    const statusMap = {};
+    const takenSeats = new Set(eventBookings.map(b => b.details?.seat));
+    let capacity = parseInt(eventBookings[0]?.details?.capacity || 0);
 
-    bookings.forEach(b => {
-      const slotTime = (b.details?.time || '').trim();
-      if (slotTime) {
-        const key = slotTime;
-        if (!statusMap[key]) {
-          statusMap[key] = b.status;
-        } else if (b.status === 'confirmed') {
-          statusMap[key] = 'confirmed';
-        }
-      }
-    });
+    if (!capacity) {
+      const eventInfo = await Booking.findOne({
+        type: 'event',
+        'details.event': name,
+        'details.date': date
+      });
+      capacity = parseInt(eventInfo?.details?.capacity || 0);
+    }
 
-    const updatedSlots = (venue.details?.slots || []).map((slot, idx) => {
-      const key = slot.trim();
-      const status = statusMap[key] === 'confirmed'
-        ? 'booked'
-        : statusMap[key] === 'pending'
-        ? 'pending'
-        : 'available';
+    if (!capacity) {
+      const venue = await Venue.findOne({ name: new RegExp(`^${name}$`, 'i'), date });
+      capacity = parseInt(venue?.capacity || 24);
+    }
 
+    const seats = Array.from({ length: capacity }).map((_, i) => {
+      const seatId = (i + 1).toString();
       return {
-        id: `slot${idx + 1}`,
-        time: slot,
-        status
+        id: seatId,
+        status: takenSeats.has(seatId) ? 'booked' : 'available'
       };
     });
 
-    res.json({ slots: updatedSlots });
+    res.json({ seats });
   } catch (err) {
-    console.error('Availability error:', err);
-    res.status(500).json({ error: res.__('availability.loadFail') });
+    console.error('Event seat availability error:', err);
+    res.status(500).json({ error: res.__('availability.seatLoadFail') });
   }
 });
 
