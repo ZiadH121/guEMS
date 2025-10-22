@@ -118,7 +118,7 @@ const Payment = () => {
           body: JSON.stringify({
             type,
             itemId: type === 'event'
-              ? `${item.name}__${item.date}__${item.time}`
+              ? item._id || `${item.name}__${item.date}__${item.slot || `${item.startTime}-${item.endTime}`}`
               : `${item.name}__${item.date}`,
               venueId: item.venueId,
               details: {

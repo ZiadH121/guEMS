@@ -280,23 +280,24 @@ router.get('/admin/bookings', verifyToken, requireRole('staff'), async (req, res
 
 router.get('/bookings/export/:eventName', verifyToken, requireRole('staff'), async (req, res) => {
   try {
-    const eventName = decodeURIComponent(req.params.eventName);
+    const eventName = decodeURIComponent(req.params.eventName).trim();
 
     const bookings = await Booking.find({
       type: 'event',
       status: 'confirmed',
-      'details.event': eventName
+      'details.event': { $regex: `^${eventName}$`, $options: 'i' }
     })
-      .populate('user', 'name email')
+      .populate('user', 'name email role')
       .sort({ createdAt: 1 });
 
-    if (bookings.length === 0) {
+    if (!bookings.length) {
       return res.status(404).json({ error: res.__('bookings.noAttendees') });
     }
 
-    const filtered = bookings.filter(
-      b => b.user?._id.toString() !== bookings[0].details?.creator?._id?.toString()
-    );
+    const hostId = bookings.find(b => b.user?.role === 'staff' || b.user?.role === 'admin')?.user?._id?.toString();
+    const filtered = hostId
+      ? bookings.filter(b => b.user?._id?.toString() !== hostId)
+      : bookings.slice(1);
 
     const rows = filtered.map(b => ({
       Name: b.user?.name || '—',
@@ -306,10 +307,10 @@ router.get('/bookings/export/:eventName', verifyToken, requireRole('staff'), asy
       Venue: b.details?.venue || '—'
     }));
 
-    let csv = 'Name,Email,Seat,Date,Venue\n';
+    let csv = '\uFEFFName,Email,Seat,Date,Venue\n';
     csv += rows.map(r => `${r.Name},${r.Email},${r.Seat},${r.Date},${r.Venue}`).join('\n');
 
-    res.header('Content-Type', 'text/csv');
+    res.header('Content-Type', 'text/csv; charset=utf-8');
     res.attachment(`attendees_${eventName}.csv`);
     res.send(csv);
   } catch (err) {

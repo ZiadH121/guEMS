@@ -118,6 +118,11 @@ const CreateEvent = () => {
           price: Number(form.price),
           image: form.image
         },
+        creator: {
+          id: JSON.parse(localStorage.getItem('user') || '{}')._id,
+          name: JSON.parse(localStorage.getItem('user') || '{}').name,
+          email: JSON.parse(localStorage.getItem('user') || '{}').email
+        },
         status: 'confirmed'
       };
 
