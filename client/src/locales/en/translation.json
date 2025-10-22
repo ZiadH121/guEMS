@@ -586,7 +586,8 @@
     "register": "Register",
     "tickets": "Ticket Booking",
     "createEvent": "Event Creation",
-    "venueLiveBook": "Venue Live Booking"
+    "venueLiveBook": "Venue Live Booking",
+    "submitProposal": "Proposal Submissions"
   },
 
   "proposal": {

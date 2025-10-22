@@ -31,6 +31,10 @@ const SubmitProposal = () => {
     '8:00 PM - 10:00 PM'
   ];
 
+    useEffect(() => {
+      document.title = `GEMS - ${t('titles.submitProposal')}`;
+    }, [t]);  
+
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
