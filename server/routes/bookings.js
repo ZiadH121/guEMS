@@ -327,7 +327,7 @@ router.get('/bookings/export-events', verifyToken, requireRole('staff'), async (
       type: 'event',
       'details.event': { $exists: true }
     })
-      .populate('user', 'name email')
+      .populate('user', 'name email role')
       .sort({ createdAt: -1 });
 
     if (bookings.length === 0) {
@@ -339,11 +339,11 @@ router.get('/bookings/export-events', verifyToken, requireRole('staff'), async (
       const name = b.details?.event || 'Unnamed Event';
       if (!grouped[name]) {
         grouped[name] = {
-          name,
+          event: name,
           venue: b.details?.venue || '—',
           date: b.details?.date || '—',
           capacity: b.details?.capacity || 0,
-          creator: b.details?.creator || b.user,
+          creator: b.user,
           confirmed: 0
         };
       }
@@ -351,7 +351,7 @@ router.get('/bookings/export-events', verifyToken, requireRole('staff'), async (
     }
 
     const rows = Object.values(grouped).map(g => ({
-      Event: g.name,
+      Event: g.event,
       Venue: g.venue,
       Date: new Date(g.date).toLocaleDateString(),
       Capacity: g.capacity,
@@ -360,17 +360,17 @@ router.get('/bookings/export-events', verifyToken, requireRole('staff'), async (
       Email: g.creator?.email || '—'
     }));
 
+    let csv = '\uFEFFEvent,Venue,Date,Capacity,Confirmed,Creator,Email\n';
+    csv += rows
+      .map(
+        r =>
+          `${r.Event},${r.Venue},${r.Date},${r.Capacity},${r.Confirmed},${r.Creator},${r.Email}`
+      )
+      .join('\n');
 
-    let csv = 'Name,Email,Seat,Date,Venue\n';
-      csv += rows.map(r => `${r.Name},${r.Email},${r.Seat},${r.Date},${r.Venue}`).join('\n');
-
-      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-      res.setHeader(
-        'Content-Disposition',
-        `attachment; filename*=UTF-8''${encodeURIComponent(`attendees_${eventName}.csv`)}`
-      );
-      res.send('\uFEFF' + csv);
-
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="events_export.csv"');
+    res.send(csv);
   } catch (err) {
     console.error('Events CSV export error:', err);
     res.status(500).json({ error: res.__('bookings.exportFail') });
