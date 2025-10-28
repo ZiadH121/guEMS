@@ -146,6 +146,24 @@ const BookingManagementTab = () => {
     }
   };
 
+  const handleDeleteEvent = async (event) => {
+  if (!window.confirm(t('bkngMgmt.deleteConfirm', { name: event.name }))) return;
+  try {
+    const token = localStorage.getItem('token');
+    const res = await apiFetch(`/bookings/${event.list[0]._id}/delete`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to delete event');
+    alert(t('bkngMgmt.deletedSuccess'));
+    fetchBookings();
+  } catch (err) {
+    alert(t('bkngMgmt.deleteError'));
+    console.error(err);
+  }
+};
+
   return (
     <div className="fade-in">
       <h4 className="text-center mb-4">{t('bkngMgmt.title')}</h4>
@@ -211,9 +229,17 @@ const BookingManagementTab = () => {
                     <Button
                       size="sm"
                       variant="outline-success"
+                      className="me-2"
                       onClick={() => handleExportCSV(ev.name)}
                     >
                       <FaFileCsv className="me-1" /> {t('bkngMgmt.exportCSV')}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline-danger"
+                      onClick={() => handleDeleteEvent(ev)}
+                    >
+                      <FaTrash className="me-1" /> {t('bkngMgmt.deleteEvent')}
                     </Button>
                   </td>
                 </tr>
