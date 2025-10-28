@@ -297,9 +297,14 @@ router.get('/bookings/export/:eventName', verifyToken, requireRole('staff'), asy
       return res.status(404).json({ error: res.__('bookings.noAttendees') });
     }
 
-    const filtered = bookings.filter(b =>
-      !['staff', 'admin', 'organizer'].includes(b.user?.role)
-    );
+    let creatorId = null;
+    if (bookings.length > 0) {
+      creatorId = bookings[0].user?._id?.toString();
+    }
+
+    const filtered = creatorId
+      ? bookings.filter(b => b.user?._id?.toString() !== creatorId)
+      : bookings;
 
     const rows = filtered.map(b => ({
       Name: b.user?.name || '—',
