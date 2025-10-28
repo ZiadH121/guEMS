@@ -285,7 +285,10 @@ router.get('/bookings/export/:eventName', verifyToken, requireRole('staff'), asy
     const bookings = await Booking.find({
       type: 'event',
       status: 'confirmed',
-      'details.event': { $regex: `^${eventName}$`, $options: 'i' }
+      $or: [
+        { 'details.event': { $regex: `^${eventName}$`, $options: 'i' } },
+        { itemId: { $regex: `^${eventName}(__|$)`, $options: 'i' } }
+      ]
     })
       .populate('user', 'name email role')
       .sort({ createdAt: 1 });
@@ -294,10 +297,9 @@ router.get('/bookings/export/:eventName', verifyToken, requireRole('staff'), asy
       return res.status(404).json({ error: res.__('bookings.noAttendees') });
     }
 
-    const hostId = bookings.find(b => b.user?.role === 'staff' || b.user?.role === 'admin')?.user?._id?.toString();
-    const filtered = hostId
-      ? bookings.filter(b => b.user?._id?.toString() !== hostId)
-      : bookings.slice(1);
+    const filtered = bookings.filter(b =>
+      !['staff', 'admin', 'organizer'].includes(b.user?.role)
+    );
 
     const rows = filtered.map(b => ({
       Name: b.user?.name || '—',
