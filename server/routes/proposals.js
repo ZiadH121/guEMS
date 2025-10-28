@@ -90,19 +90,26 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
     proposal.status = 'approved';
     await proposal.save();
 
+    const eventId = `${proposal.title}__${proposal.date}`;
     const booking = new Booking({
       type: 'event',
-      itemId: proposal.venue._id,
+      itemId: eventId,
       details: {
         event: proposal.title,
-        description: proposal.description,
-        venue: proposal.venue.name,
+        description: proposal.description || '',
+        venue: proposal.venue?.name || 'Unknown Venue',
         date: proposal.date,
-        capacity: proposal.capacity
+        capacity: proposal.capacity || 0,
+        price: proposal.price || 'Free',
+        time:
+          proposal.slotType === 'preset'
+            ? proposal.slot
+            : `${proposal.startTime || 'N/A'} - ${proposal.endTime || 'N/A'}`
       },
       status: 'confirmed',
       user: proposal.proposer
     });
+
     await booking.save();
 
     res.json({ message: res.__('proposal.approved'), proposal });
