@@ -382,4 +382,31 @@ router.get('/bookings/export-events', verifyToken, requireRole('staff'), async (
   }
 });
 
+router.delete('/bookings/:id/delete', verifyToken, requireRole('staff'), async (req, res) => {
+  try {
+    const mainEvent = await Booking.findById(req.params.id);
+    if (!mainEvent) {
+      return res.status(404).json({ error: res.__('bookings.notFound') });
+    }
+
+    const eventName = mainEvent.details?.event || mainEvent.itemId;
+
+    const deleted = await Booking.deleteMany({
+      type: 'event',
+      $or: [
+        { 'details.event': eventName },
+        { itemId: { $regex: `^${eventName}(__|$)`, $options: 'i' } }
+      ]
+    });
+
+    console.log(`[DELETE EVENT] ${eventName} → ${deleted.deletedCount} related bookings removed`);
+
+    res.json({ message: res.__('bookings.eventDeleted'), deleted: deleted.deletedCount });
+  } catch (err) {
+    console.error('Event delete error:', err);
+    res.status(500).json({ error: res.__('bookings.eventDeleteFail') });
+  }
+});
+
+
 module.exports = router;

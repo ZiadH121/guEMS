@@ -41,7 +41,9 @@
         "failedLoadEvents": "Failed to load events",
         "noAttendees": "No attendees found for this event.",
         "exportFail": "Failed to export attendee list.",
-        "noEventsFound": "No events found to export."
+        "noEventsFound": "No events found to export.",
+        "eventDeleted": "Event and all related bookings deleted successfully.",
+        "eventDeleteFail": "Failed to delete event and its bookings."
     },
 
     "feedback": {

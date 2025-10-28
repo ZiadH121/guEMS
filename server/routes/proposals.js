@@ -138,9 +138,6 @@ router.delete('/:id', verifyToken, requireRole('staff'), async (req, res) => {
     const proposal = await Proposal.findById(req.params.id);
     if (!proposal) return res.status(404).json({ error: res.__('proposal.notFound') });
 
-    const Booking = require('../models/Booking');
-    await Booking.deleteMany({ 'details.event': proposal.title });
-
     await proposal.deleteOne();
 
     res.json({ message: res.__('proposal.deleted') });
