@@ -155,7 +155,9 @@ const TicketBooking = () => {
 
                       <Card.Text className="mb-1">
                         <strong>{t('tickets.time')} </strong>
-                        {event.slotType === 'preset'
+                        {event.time
+                          ? event.time
+                          : event.slotType === 'preset'
                           ? event.slot || '—'
                           : event.startTime && event.endTime
                           ? `${formatTime(event.startTime)} - ${formatTime(event.endTime)}`
