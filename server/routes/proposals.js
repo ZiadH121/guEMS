@@ -19,7 +19,9 @@ router.post('/', verifyToken, async (req, res) => {
       slotType,
       slot,
       startTime,
-      endTime
+      endTime,
+      price,
+      image
     } = req.body;
 
     const venueDoc = await Venue.findById(venue);
@@ -61,6 +63,8 @@ router.post('/', verifyToken, async (req, res) => {
       slot,
       startTime,
       endTime,
+      price,
+      image,
       proposer: req.user.id
     });
 

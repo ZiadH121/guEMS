@@ -9,13 +9,15 @@ const proposalSchema = new mongoose.Schema({
   date: String,
 
   slotType: { type: String, enum: ['preset', 'custom'], default: 'preset' },
-  slot: String, 
-  startTime: String,
-  endTime: String,
+  slot: { type: String, default: '' },
+  startTime: { type: String, default: '' },
+  endTime: { type: String, default: '' },
+
+  price: { type: Number, default: 0 },
+  image: { type: String, default: '' },
 
   sldNeeds: String,
   proposer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   status: { type: String, default: 'pending' }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Proposal', proposalSchema);
