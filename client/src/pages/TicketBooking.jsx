@@ -155,7 +155,9 @@ const TicketBooking = () => {
 
                       <Card.Text className="mb-1">
                         <strong>{t('tickets.time')} </strong>
-                        {event.time
+                        {event.details?.time
+                          ? event.details.time
+                          : event.time
                           ? event.time
                           : event.slotType === 'preset'
                           ? event.slot || '—'
