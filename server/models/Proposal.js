@@ -8,7 +8,7 @@ const proposalSchema = new mongoose.Schema({
   venue: { type: mongoose.Schema.Types.ObjectId, ref: 'Venue' },
   date: String,
 
-  slotType: { type: String, enum: ['preset', 'custom'], default: 'preset' },
+  slotType: { type: String, default: 'preset' },
   slot: { type: String, default: '' },
   startTime: { type: String, default: '' },
   endTime: { type: String, default: '' },
