@@ -97,6 +97,13 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
     proposal.status = 'approved';
     await proposal.save();
 
+    console.log('[DEBUG PROPOSAL]', {
+    slotType: proposal.slotType,
+    slot: proposal.slot,
+    startTime: proposal.startTime,
+    endTime: proposal.endTime
+  });
+
     const eventId = `${proposal.title}__${proposal.date}`;
 
     let time = '—';
