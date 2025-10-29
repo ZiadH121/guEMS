@@ -106,12 +106,22 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
 
     const eventId = `${proposal.title}__${proposal.date}`;
 
+    function formatTo12h(timeStr) {
+      if (!timeStr) return '';
+      const [hourStr, minute] = timeStr.split(':');
+      let hour = parseInt(hourStr, 10);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      hour = hour % 12 || 12;
+      return `${hour}:${minute} ${ampm}`;
+    }
+
     let time = '—';
-    if (proposal.slot && proposal.slot.trim() !== '') {
+
+    if (proposal.slotType === 'preset' && proposal.slot) {
       time = proposal.slot.trim();
-    } else if (proposal.startTime && proposal.endTime) {
-      const start = proposal.startTime.trim();
-      const end = proposal.endTime.trim();
+    } else if (proposal.slotType === 'custom' && proposal.startTime && proposal.endTime) {
+      const start = formatTo12h(proposal.startTime.trim());
+      const end = formatTo12h(proposal.endTime.trim());
       time = `${start} - ${end}`;
     }
 
