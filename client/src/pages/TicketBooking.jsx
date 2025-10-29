@@ -59,6 +59,7 @@ const TicketBooking = () => {
           capacity: b.details.capacity || 0,
           image: b.details.image || null,
           price: b.details.price || 0,
+          time: b.details.time || b.time || '—',
           slotType: b.details.slotType,
           slot: b.details.slot,
           startTime: b.details.startTime,
