@@ -125,6 +125,10 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
       time = `${start} - ${end}`;
     }
 
+    if (time === '—' && proposal.slot) time = proposal.slot;
+    
+    console.log('[DEBUG TIME RESULT]', time);
+
     const price = proposal.price && proposal.price > 0 ? `${proposal.price}` : 'Free';
     const image = proposal.image || '';
 
