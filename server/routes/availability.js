@@ -1,6 +1,6 @@
-// availability.js - Live booking seat availability logic
-
+// availability.js - Safe and flexible seat availability logic
 const express = require('express');
+const mongoose = require('mongoose');
 const Booking = require('../models/Booking');
 const Venue = require('../models/Venue');
 const router = express.Router();
@@ -9,19 +9,26 @@ router.get('/availability/event/:id', async (req, res) => {
   try {
     const eventId = decodeURIComponent(req.params.id);
 
-    const eventInfo =
-      (await Booking.findOne({ _id: eventId, type: 'event' })) ||
-      (await Booking.findOne({ itemId: eventId, type: 'event' })) ||
-      (await Booking.findOne({
-        type: 'event',
-        $or: [
-          { itemId: { $regex: `^${eventId.split('__')[0]}(__|$)`, $options: 'i' } },
-          { 'details.event': { $regex: `^${eventId.split('__')[0]}`, $options: 'i' } }
-        ]
-      }));
+    let eventInfo = null;
+
+    if (mongoose.Types.ObjectId.isValid(eventId)) {
+      eventInfo = await Booking.findOne({ _id: eventId, type: 'event' });
+    }
 
     if (!eventInfo) {
-      console.warn(`[AVAILABILITY] No event match for id: ${eventId}`);
+      eventInfo =
+        (await Booking.findOne({ itemId: eventId, type: 'event' })) ||
+        (await Booking.findOne({
+          type: 'event',
+          $or: [
+            { itemId: { $regex: `^${eventId.split('__')[0]}(__|$)`, $options: 'i' } },
+            { 'details.event': { $regex: `^${eventId.split('__')[0]}`, $options: 'i' } }
+          ]
+        }));
+    }
+
+    if (!eventInfo) {
+      console.warn(`[AVAILABILITY] No event found for id: ${eventId}`);
       return res.status(404).json({ error: res.__('availability.eventNotFound') });
     }
 
