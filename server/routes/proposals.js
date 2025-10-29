@@ -99,14 +99,17 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
 
     const eventId = `${proposal.title}__${proposal.date}`;
 
-    const time =
-      proposal.slotType === 'preset'
-        ? proposal.slot
-        : proposal.startTime && proposal.endTime
-        ? `${proposal.startTime} - ${proposal.endTime}`
-        : '—';
+    let time = '—';
+    if (proposal.slot && proposal.slot.trim() !== '') {
+      time = proposal.slot.trim();
+    } else if (proposal.startTime && proposal.endTime) {
+      const start = proposal.startTime.trim();
+      const end = proposal.endTime.trim();
+      time = `${start} - ${end}`;
+    }
 
     const price = proposal.price && proposal.price > 0 ? `${proposal.price}` : 'Free';
+    const image = proposal.image || '';
 
     const booking = new Booking({
       type: 'event',
@@ -118,6 +121,7 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
         date: proposal.date,
         time,
         price,
+        image,
         capacity: proposal.capacity || 0
       },
       status: 'confirmed',
