@@ -1,4 +1,4 @@
-// availability.js - Unified real-time availability logic
+// availability.js - Live booking seat availability logic
 
 const express = require('express');
 const Booking = require('../models/Booking');
@@ -9,13 +9,19 @@ router.get('/availability/event/:id', async (req, res) => {
   try {
     const eventId = decodeURIComponent(req.params.id);
 
-    const eventInfo = await Booking.findOne({
-      $or: [{ _id: eventId }, { itemId: eventId }],
-      type: 'event'
-    });
+    const eventInfo =
+      (await Booking.findOne({ _id: eventId, type: 'event' })) ||
+      (await Booking.findOne({ itemId: eventId, type: 'event' })) ||
+      (await Booking.findOne({
+        type: 'event',
+        $or: [
+          { itemId: { $regex: `^${eventId.split('__')[0]}(__|$)`, $options: 'i' } },
+          { 'details.event': { $regex: `^${eventId.split('__')[0]}`, $options: 'i' } }
+        ]
+      }));
 
     if (!eventInfo) {
-      console.warn(`[AVAILABILITY] Event not found for id: ${eventId}`);
+      console.warn(`[AVAILABILITY] No event match for id: ${eventId}`);
       return res.status(404).json({ error: res.__('availability.eventNotFound') });
     }
 
