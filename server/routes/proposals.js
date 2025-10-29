@@ -78,10 +78,13 @@ router.post('/', verifyToken, async (req, res) => {
 
 router.get('/', verifyToken, requireRole('staff'), async (req, res) => {
   try {
-    const proposals = await Proposal.find().populate('proposer', 'name email').populate('venue', 'name');
+    const proposals = await Proposal.find()
+      .populate('proposer', 'name email')
+      .populate('venue', 'name');
     res.json(proposals);
   } catch (err) {
-    res.status(500).json({ error: res.__('proposal.fetchError') });
+    console.error('Error fetching proposals:', err);
+    res.status(500).json({ error: res.__('proposal.fetchError'), details: err.message });
   }
 });
 
