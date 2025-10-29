@@ -91,6 +91,16 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
     await proposal.save();
 
     const eventId = `${proposal.title}__${proposal.date}`;
+
+    const time =
+      proposal.slotType === 'preset'
+        ? proposal.slot
+        : proposal.startTime && proposal.endTime
+        ? `${proposal.startTime} - ${proposal.endTime}`
+        : '—';
+
+    const price = proposal.price && proposal.price > 0 ? `${proposal.price}` : 'Free';
+
     const booking = new Booking({
       type: 'event',
       itemId: eventId,
@@ -99,12 +109,9 @@ router.patch('/:id/approve', verifyToken, requireRole('staff'), async (req, res)
         description: proposal.description || '',
         venue: proposal.venue?.name || 'Unknown Venue',
         date: proposal.date,
-        capacity: proposal.capacity || 0,
-        price: proposal.price || 'Free',
-        time:
-          proposal.slotType === 'preset'
-            ? proposal.slot
-            : `${proposal.startTime || 'N/A'} - ${proposal.endTime || 'N/A'}`
+        time,
+        price,
+        capacity: proposal.capacity || 0
       },
       status: 'confirmed',
       user: proposal.proposer
