@@ -103,29 +103,48 @@ const CreateEvent = () => {
     try {
       const selectedVenue = venues.find((v) => v._id === form.venue);
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      const body = {
-        type: 'event',
-        itemId: form.name.trim() + '_' + form.date,
-        details: {
-          event: form.name.trim(),
-          description: form.description,
-          venue: selectedVenue?.name || 'Unknown',
-          date: form.date,
-          slotType: form.slotType,
-          slot: form.slot,
-          startTime: form.startTime,
-          endTime: form.endTime,
-          capacity: Number(form.capacity) || 0,
-          price: Number(form.price) || 0,
-          image: form.image,
-          creator: {
-            id: user._id,
-            name: user.name,
-            email: user.email
-          }
-        },
-        status: 'confirmed'
-      };
+        const formatTo12h = (timeStr) => {
+          if (!timeStr) return '';
+          const [hourStr, minute] = timeStr.split(':');
+          let hour = parseInt(hourStr, 10);
+          const ampm = hour >= 12 ? 'PM' : 'AM';
+          hour = hour % 12 || 12;
+          return `${hour}:${minute} ${ampm}`;
+        };
+
+        let time = '—';
+        if (form.slotType === 'preset' && form.slot) {
+          time = form.slot;
+        } else if (form.slotType === 'custom' && form.startTime && form.endTime) {
+          const start = formatTo12h(form.startTime);
+          const end = formatTo12h(form.endTime);
+          time = `${start} - ${end}`;
+        }
+
+        const body = {
+          type: 'event',
+          itemId: form.name.trim() + '_' + form.date,
+          details: {
+            event: form.name.trim(),
+            description: form.description,
+            venue: selectedVenue?.name || 'Unknown',
+            date: form.date,
+            slotType: form.slotType,
+            slot: form.slot,
+            startTime: form.startTime,
+            endTime: form.endTime,
+            time,
+            capacity: Number(form.capacity) || 0,
+            price: Number(form.price) || 0,
+            image: form.image,
+            creator: {
+              id: user._id,
+              name: user.name,
+              email: user.email
+            }
+          },
+          status: 'confirmed'
+        };
 
       const res = await apiFetch('/bookings', {
         method: 'POST',
