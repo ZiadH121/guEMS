@@ -79,7 +79,7 @@ router.post('/bookings', verifyToken, async (req, res) => {
         }
 
           let mergedDetails = { ...details };
-          
+
         if (type === 'event') {
           const parentEvent = await Booking.findOne({
             itemId,
@@ -89,8 +89,8 @@ router.post('/bookings', verifyToken, async (req, res) => {
 
           if (parentEvent) {
             mergedDetails = {
-              ...parentEvent.details,
-              ...details
+              ...details,
+              ...parentEvent.details
             };
           }
         }
