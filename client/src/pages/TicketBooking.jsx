@@ -67,7 +67,14 @@ const TicketBooking = () => {
         });
       }
       
-        setEvents(result);
+        const unique = {};
+          for (const ev of result) {
+            const id = ev._id;
+            if (!unique[id] || ev.status === 'confirmed') {
+              unique[id] = ev;
+            }
+          }
+        setEvents(Object.values(unique));
       } catch (err) {
         console.error('Failed to fetch bookings:', err);
       }
