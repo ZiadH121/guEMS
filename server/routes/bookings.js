@@ -78,15 +78,29 @@ router.post('/bookings', verifyToken, async (req, res) => {
           continue;
         }
 
+          let mergedDetails = { ...details };
+          
+        if (type === 'event') {
+          const parentEvent = await Booking.findOne({
+            itemId,
+            type: 'event',
+            status: 'confirmed'
+          });
+
+          if (parentEvent) {
+            mergedDetails = {
+              ...parentEvent.details,
+              ...details
+            };
+          }
+        }
+
         const booking = new Booking({
           user: req.user.id,
           type,
-          itemId: composedItemId,
-          venueRef: req.body.venueId,
-          details: {
-            ...details,
-            time: slotTime
-          },
+          itemId,
+          venueRef: type === 'venue' ? req.body.venueId : undefined,
+          details: mergedDetails,
           status: 'pending',
           expiresAt: new Date(Date.now() + 15 * 60 * 1000)
         });
